@@ -1,0 +1,18 @@
+{
+  "dependencies": {
+    "sleep-promise": "^9.1.0",
+    "vec3": "^0.1.7"
+  },
+  "name": "mineflayer-autocrystal",
+  "version": "0.1.0",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Link#0069",
+  "repository": "",
+  "license": "ISC",
+  "description": "mineflayer-autocrystal is a plugin that lets mineflayer bots automatically place and destroy end crystals."
+}
