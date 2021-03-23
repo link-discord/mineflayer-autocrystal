@@ -79,7 +79,7 @@ Give a ⭐️ if this project helped you!
 ## 📝 License
 
 Copyright © 2021 [Link#0069](https://github.com/LINKdiscordd).<br />
-This project is [ISC](https://github.com/LINKdiscordd/mineflayer-autocrystal/blob/master/LICENSE) licensed.
+This project is [GNU GPLv3](https://github.com/LINKdiscordd/mineflayer-autocrystal/blob/master/LICENSE) licensed.
 
 ***
 _This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_
