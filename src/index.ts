@@ -1,9 +1,9 @@
-import { Bot } from 'mineflayer'
 import { AutoCrystal } from './AutoCrystal'
+import { Bot } from 'mineflayer'
 
 export function autoCrystal(bot: Bot) {
-	const autocrystal = new AutoCrystal(bot)
-
-	// @ts-expect-error
-	bot.autoCrystal = autocrystal
+    // @ts-expect-error
+    bot.autoCrystal = new AutoCrystal(bot)
 }
+
+export { AutoCrystal } from './AutoCrystal'

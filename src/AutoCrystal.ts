@@ -1,5 +1,6 @@
-import sleep = require('sleep-promise')
+import sleep from 'sleep-promise'
 import { Bot } from 'mineflayer'
+import { Entity } from 'prismarine-entity'
 import { Vec3 } from 'vec3'
 
 export class AutoCrystal {
@@ -12,7 +13,14 @@ export class AutoCrystal {
 		this.bot = bot
 	}
 
-	private async placeCrystal(position: Vec3) {
+	/**
+     * Places a crystal close to the position if possible
+	 * 
+	 * @param Vec3 A Vec3 position.
+     * 
+     * @returns A boolean if it worked or not.
+     */
+	private async placeCrystal(position: Vec3): Promise<boolean> {
 		position = new Vec3(Math.floor(position.x), Math.floor(position.y), Math.floor(position.z))
 
 		let blocks = this.bot.findBlocks({
@@ -53,6 +61,11 @@ export class AutoCrystal {
         return false
 	}
 
+	/**
+     * Breaks the nearest crystal
+     * 
+     * @returns A boolean if it worked or not
+     */
 	private async breakCrystal() {
 		await sleep(this.tick * 2)
 		const crystal = this.bot.nearestEntity((entity) => entity.name === 'end_crystal')
@@ -65,7 +78,12 @@ export class AutoCrystal {
 		}
 	}
 
-	private async getNearestPlayer() {
+	/**
+     * Gets the nearest player
+     * 
+     * @returns The nearest player entity object.
+     */
+	private async getNearestPlayer(): Promise<Entity> {
 		const player = this.bot.nearestEntity(
 			(entity) => entity.type === 'player' && entity.position.distanceTo(this.bot.entity.position) <= 10
 		)
@@ -74,6 +92,11 @@ export class AutoCrystal {
 		else return null
 	}
 
+	/**
+     * Gets holes near the bot.
+     *
+     * @returns An array of Vec3 positions
+     */
 	async getHoles() {
 		let holes: Vec3[] = []
 
@@ -102,6 +125,9 @@ export class AutoCrystal {
 		return holes
 	}
 
+	/**
+     * Enables the AutoCrystal
+     */
 	async enable() {
 		if (this.started) return
 		this.started = true
@@ -127,6 +153,9 @@ export class AutoCrystal {
 		this.run = true
 	}
 
+	/**
+     * Disables the AutoCrystal
+     */
 	async disable() {
 		this.run = false
 	}

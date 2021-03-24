@@ -18,7 +18,7 @@ bot.on('message', async (username, message) => {
 
 	if (message === 'start') {
 		console.log('AutoCrystal enabled.')
-		bot.autoCrystal.enable()
+		bot.autoCrystal
 	}
 
 	else if (message === 'stop') {
