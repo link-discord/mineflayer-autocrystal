@@ -139,15 +139,6 @@ export class AutoCrystal {
 		return holes
 	}
 
-	/**
-	 * Enables the AutoCrystal
-	 */
-	async enable() {
-		if (this.started) return
-
-		this.enabled = true
-	}
-
 	private async start() {
 		if (this.started || !this.enabled) return
 		this.started = true
@@ -175,6 +166,12 @@ export class AutoCrystal {
 		this.run = true
 	}
 
+	private async stop() {
+		if (!this.enabled) return
+
+		this.run = false
+	}
+
 	/**
 	 * Disables the AutoCrystal
 	 */
@@ -184,9 +181,12 @@ export class AutoCrystal {
 		this.enabled = false
 	}
 
-	private async stop() {
-		if (!this.enabled) return
+	/**
+	 * Enables the AutoCrystal
+	 */
+	async enable() {
+		if (this.started) return
 
-		this.run = false
+		this.enabled = true
 	}
 }
