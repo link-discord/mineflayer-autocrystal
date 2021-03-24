@@ -8,19 +8,29 @@ export class AutoCrystal {
 	private readonly tick: number = 50
 	private run: boolean = true
 	private started: boolean = false
+	private enabled: boolean = false
 
 	constructor(bot: Bot) {
 		this.bot = bot
+
+		bot.on('physicsTick', () => {
+			const player = this.getNearestPlayer()
+
+			if (player && !this.started && this.enabled) this.start()
+			else if (!player && this.started && this.enabled) this.stop()
+		})
 	}
 
 	/**
-     * Places a crystal close to the position if possible
-	 * 
+	 * Places a crystal close to the position if possible
+	 *
 	 * @param Vec3 A Vec3 position.
-     * 
-     * @returns A boolean if it worked or not.
-     */
+	 *
+	 * @returns A boolean if it worked or not.
+	 */
 	private async placeCrystal(position: Vec3): Promise<boolean> {
+		if (!this.enabled) return false
+
 		position = new Vec3(Math.floor(position.x), Math.floor(position.y), Math.floor(position.z))
 
 		let blocks = this.bot.findBlocks({
@@ -58,16 +68,18 @@ export class AutoCrystal {
 			return true
 		}
 
-        return false
+		return false
 	}
 
 	/**
-     * Breaks the nearest crystal
-     * 
-     * @returns A boolean if it worked or not
-     */
+	 * Breaks the nearest crystal
+	 *
+	 * @returns A boolean if it worked or not
+	 */
 	private async breakCrystal() {
-		await sleep(this.tick * 2)
+		if (!this.enabled) return false
+
+		await sleep(this.tick)
 		const crystal = this.bot.nearestEntity((entity) => entity.name === 'end_crystal')
 
 		if (crystal) {
@@ -79,13 +91,15 @@ export class AutoCrystal {
 	}
 
 	/**
-     * Gets the nearest player
-     * 
-     * @returns The nearest player entity object.
-     */
+	 * Gets the nearest player
+	 *
+	 * @returns The nearest player entity object.
+	 */
 	private async getNearestPlayer(): Promise<Entity> {
+		if (!this.enabled) return null
+
 		const player = this.bot.nearestEntity(
-			(entity) => entity.type === 'player' && entity.position.distanceTo(this.bot.entity.position) <= 10
+			(entity) => entity.type === 'player' && entity.position.distanceTo(this.bot.entity.position) <= 6
 		)
 
 		if (player) return player
@@ -93,10 +107,10 @@ export class AutoCrystal {
 	}
 
 	/**
-     * Gets holes near the bot.
-     *
-     * @returns An array of Vec3 positions
-     */
+	 * Gets holes near the bot.
+	 *
+	 * @returns An array of Vec3 positions
+	 */
 	async getHoles() {
 		let holes: Vec3[] = []
 
@@ -126,26 +140,34 @@ export class AutoCrystal {
 	}
 
 	/**
-     * Enables the AutoCrystal
-     */
+	 * Enables the AutoCrystal
+	 */
 	async enable() {
 		if (this.started) return
+
+		this.enabled = true
+	}
+
+	private async start() {
+		if (this.started || !this.enabled) return
 		this.started = true
 
 		while (this.run) {
 			const player = await this.getNearestPlayer()
 			const crystal = this.bot.inventory.items().find((item) => item.name === 'end_crystal')
 
-			if (player && crystal && this.run) {
+			if (player && crystal) {
 				if (!this.bot.heldItem || this.bot.heldItem.name !== crystal.name) this.bot.equip(crystal, 'hand')
 
 				try {
 					await this.placeCrystal(player.position)
 					await this.breakCrystal()
-					await sleep(this.tick * 2)
 				} catch (e) {
+					this.run = false
 					console.error(e)
 				}
+			} else {
+				this.run = false
 			}
 		}
 
@@ -154,9 +176,17 @@ export class AutoCrystal {
 	}
 
 	/**
-     * Disables the AutoCrystal
-     */
+	 * Disables the AutoCrystal
+	 */
 	async disable() {
+		if (!this.started) return
+
+		this.enabled = false
+	}
+
+	private async stop() {
+		if (!this.enabled) return
+
 		this.run = false
 	}
 }

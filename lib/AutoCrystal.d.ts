@@ -5,6 +5,7 @@ export declare class AutoCrystal {
     private readonly tick;
     private run;
     private started;
+    private enabled;
     constructor(bot: Bot);
     /**
      * Places a crystal close to the position if possible
@@ -36,8 +37,10 @@ export declare class AutoCrystal {
      * Enables the AutoCrystal
      */
     enable(): Promise<void>;
+    private start;
     /**
      * Disables the AutoCrystal
      */
     disable(): Promise<void>;
+    private stop;
 }

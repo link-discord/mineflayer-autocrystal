@@ -1,11 +1,10 @@
 {
   "name": "mineflayer-autocrystal",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "dependencies": {
     "mineflayer": "^3.4.0",
-    "mineflayer-pvp": "^1.0.2",
     "prismarine-entity": "^1.1.0",
     "sleep-promise": "^9.1.0",
     "vec3": "^0.1.7"
@@ -14,7 +13,8 @@
     "@types/node": "^14.14.35"
   },
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "test": "tsc && cd examples && node example.js"
   },
   "keywords": [],
   "author": "Link#0069",
