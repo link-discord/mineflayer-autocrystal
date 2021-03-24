@@ -33,14 +33,14 @@ export declare class AutoCrystal {
      * @returns An array of Vec3 positions
      */
     getHoles(): Promise<Vec3[]>;
-    /**
-     * Enables the AutoCrystal
-     */
-    enable(): Promise<void>;
     private start;
+    private stop;
     /**
      * Disables the AutoCrystal
      */
     disable(): Promise<void>;
-    private stop;
+    /**
+     * Enables the AutoCrystal
+     */
+    enable(): Promise<void>;
 }

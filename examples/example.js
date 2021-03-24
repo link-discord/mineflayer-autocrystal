@@ -4,7 +4,7 @@ const { autoCrystal } = require('../lib/index')
 function main() {
 	const bot = mineflayer.createBot({
 		host: 'localhost',
-		username: 'CrystalBot',
+		username: 'AutoCrystal',
 	})
 
 	bot.loadPlugin(autoCrystal)
