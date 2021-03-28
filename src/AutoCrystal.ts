@@ -43,7 +43,7 @@ export class AutoCrystal {
 		blocks = blocks.filter(
 			(block) =>
 				Math.round(block.distanceTo(position)) >= 1 &&
-				Math.round(block.xzDistanceTo(position)) <= 10 &&
+				Math.round(block.distanceTo(position)) <= 10 &&
 				Math.round(this.bot.entity.position.y) <= position.y &&
 				Math.abs(Math.round(this.bot.entity.position.y) - Math.round(position.y)) <= 10 &&
 				Math.abs(Math.round(this.bot.entity.position.y) - Math.round(position.y)) >= 1 &&
