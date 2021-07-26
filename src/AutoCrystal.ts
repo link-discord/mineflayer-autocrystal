@@ -1,192 +1,227 @@
-import sleep from 'sleep-promise'
 import { Bot } from 'mineflayer'
 import { Entity } from 'prismarine-entity'
 import { Vec3 } from 'vec3'
 
+interface MineflayerBot extends Bot {
+    getExplosionDamages(entity: Entity, position: Vec3, raidus: number, rawDamages?: boolean): number
+}
+
+interface Options {
+    /**
+     *  If the damage the bot would recieve is higher than this number,
+     *  it will not place / break the crystal depending on the modes that are set.
+     */
+    damageThreshold?: number
+    /**
+     * The delay in ticks between each check for the crystal.
+     */
+    delay?: number
+    placeMode?: 'suicide' | 'safe'
+    breakMode?: 'suicide' | 'safe'
+}
+
 export class AutoCrystal {
-	private readonly bot: Bot
-	private readonly tick: number = 50
-	private run: boolean = true
-	private started: boolean = false
-	private enabled: boolean = false
+    private readonly bot: MineflayerBot
+    private readonly tick: number = 50
+    private run: boolean = true
+    private started: boolean = false
+    private enabled: boolean = false
+    private options: Options = {
+        placeMode: 'safe',
+        breakMode: 'safe',
+        damageThreshold: 5,
+        delay: 1
+    }
 
-	constructor(bot: Bot) {
-		this.bot = bot
+    constructor(bot: MineflayerBot, options?: Options) {
+        this.bot = bot
+        this.options = options
 
-		bot.on('physicsTick', () => {
-			const player = this.getNearestPlayer()
+        bot.on('physicsTick', () => {
+            const player = this.getNearestPlayer()
 
-			if (player && !this.started && this.enabled) this.start()
-			else if (!player && this.started && this.enabled) this.stop()
-		})
-	}
+            if (player && !this.started && this.enabled) this.start()
+            else if (!player && this.started && this.enabled) this.stop()
+        })
+    }
 
-	/**
-	 * Places a crystal close to the position if possible
-	 *
-	 * @param Vec3 A Vec3 position.
-	 *
-	 * @returns A boolean if it worked or not.
-	 */
-	private async placeCrystal(position: Vec3): Promise<boolean> {
-		if (!this.enabled) return false
+    /**
+     * Places a crystal close to the position if possible
+     *
+     * @param Vec3 A Vec3 position.
+     *
+     * @returns A boolean if it worked or not.
+     */
+    private async placeCrystal(position: Vec3): Promise<boolean> {
+        if (!this.enabled) return false
 
-		position = new Vec3(Math.floor(position.x), Math.floor(position.y), Math.floor(position.z))
+        position = new Vec3(Math.floor(position.x), Math.floor(position.y), Math.floor(position.z))
 
-		let blocks = this.bot.findBlocks({
-			point: this.bot.entity.position,
-			maxDistance: 4,
-			count: 50,
-			matching: (block) => block.name === 'obsidian' || block.name === 'bedrock',
-		})
+        let blocks = this.bot.findBlocks({
+            point: this.bot.entity.position,
+            maxDistance: 4,
+            count: 50,
+            matching: (block) => block.name === 'obsidian' || block.name === 'bedrock'
+        })
 
-		blocks = blocks.filter(
-			(block) =>
-				Math.round(block.distanceTo(position)) >= 1 &&
-				Math.round(block.distanceTo(position)) <= 10 &&
-				Math.round(this.bot.entity.position.y) <= position.y &&
-				Math.abs(Math.round(this.bot.entity.position.y) - Math.round(position.y)) <= 10 &&
-				Math.abs(Math.round(this.bot.entity.position.y) - Math.round(position.y)) >= 1 &&
-				this.bot.entity.position.xzDistanceTo(block) >= 1
-		)
+        blocks = blocks.filter(
+            (block) =>
+                Math.round(block.distanceTo(position)) >= 1 &&
+                Math.round(block.distanceTo(position)) <= 10 &&
+                Math.round(this.bot.entity.position.y) <= position.y &&
+                Math.abs(Math.round(this.bot.entity.position.y) - Math.round(position.y)) <= 10 &&
+                Math.abs(Math.round(this.bot.entity.position.y) - Math.round(position.y)) >= 1 &&
+                this.bot.entity.position.xzDistanceTo(block) >= 1
+        )
 
-		blocks = blocks.filter((block) => this.bot.blockAt(block.offset(0, 1, 0)).name === 'air')
+        blocks = blocks.filter((block) => this.bot.blockAt(block.offset(0, 1, 0)).name === 'air')
 
-		const number = 0
+        const block = blocks[0]
 
-		if (!blocks[number] || !this.bot.blockAt(blocks[number])) return null
+        if (!block || !this.bot.blockAt(block)) return null
 
-		if (
-			(blocks && blocks.length > 1 && this.bot.blockAt(blocks[number]).name === 'obsidian') ||
-			this.bot.blockAt(blocks[number]).name === 'bedrock'
-		) {
-			try {
-				await this.bot.lookAt(blocks[number], true)
-				await this.bot.placeBlock(this.bot.blockAt(blocks[number]), new Vec3(0, 1, 0))
-			} catch (error) {}
+        const damage = this.bot.getExplosionDamages(this.bot.entity, block.offset(0, 1, 0), 6)
 
-			return true
-		}
+        if ((blocks && blocks.length > 1 && this.bot.blockAt(block).name === 'obsidian') || this.bot.blockAt(block).name === 'bedrock') {
+            try {
+                if (
+                    (this.options.placeMode === 'safe' && damage > this.options.damageThreshold) ||
+                    (this.options.placeMode === 'safe' && damage >= this.bot.health)
+                )
+                    return false
 
-		return false
-	}
+                await this.bot.lookAt(block, true)
+                await this.bot.placeEntity(this.bot.blockAt(block), new Vec3(0, 1, 0))
+            } catch (error) {}
 
-	/**
-	 * Breaks the nearest crystal
-	 *
-	 * @returns A boolean if it worked or not
-	 */
-	private async breakCrystal() {
-		if (!this.enabled) return false
+            return true
+        }
 
-		await sleep(this.tick)
-		const crystal = this.bot.nearestEntity((entity) => entity.name === 'end_crystal')
+        return false
+    }
 
-		if (crystal) {
-			this.bot.attack(crystal)
-			return true
-		} else {
-			return false
-		}
-	}
+    /**
+     * Breaks the nearest crystal
+     *
+     * @returns A boolean if it worked or not
+     */
+    private async breakCrystal() {
+        if (!this.enabled) return false
 
-	/**
-	 * Gets the nearest player
-	 *
-	 * @returns The nearest player entity object.
-	 */
-	private async getNearestPlayer(): Promise<Entity> {
-		if (!this.enabled) return null
+        await this.bot.waitForTicks(this.tick)
+        const crystal = this.bot.nearestEntity((entity) => entity.name === 'end_crystal')
 
-		const player = this.bot.nearestEntity(
-			(entity) => entity.type === 'player' && entity.position.distanceTo(this.bot.entity.position) <= 6
-		)
+        const damage = this.bot.getExplosionDamages(this.bot.entity, crystal.position, 6)
 
-		if (player) return player
-		else return null
-	}
+        if (crystal) {
+            // check if safe mode is turned on
+            if (
+                (this.options.breakMode === 'safe' && damage > this.options.damageThreshold) ||
+                (this.options.breakMode === 'safe' && damage >= this.bot.health)
+            )
+                return false
 
-	/**
-	 * Gets holes near the bot.
-	 *
-	 * @returns An array of Vec3 positions
-	 */
-	async getHoles() {
-		let holes: Vec3[] = []
+            await this.bot.activateEntity(crystal)
+            return true
+        } else {
+            return false
+        }
+    }
 
-		const blocks = this.bot.findBlocks({
-			point: this.bot.entity.position,
-			maxDistance: 10,
-			count: 2000,
-			matching: (block) => block.name === 'bedrock',
-		})
+    /**
+     * Gets the nearest player
+     *
+     * @returns The nearest player entity object.
+     */
+    private async getNearestPlayer(): Promise<Entity> {
+        if (!this.enabled) return null
 
-		for (let index = 0; index < blocks.length; index++) {
-			const block = blocks[index]
+        const player = this.bot.nearestEntity((entity) => entity.type === 'player' && entity.position.distanceTo(this.bot.entity.position) <= 6)
 
-			if (
-				this.bot.blockAt(block.offset(0, 1, 0)).name === 'air' &&
-				this.bot.blockAt(block.offset(0, 2, 0)).name === 'air' &&
-				this.bot.blockAt(block.offset(0, 3, 0)).name === 'air' &&
-				this.bot.blockAt(block.offset(1, 1, 0)).name === 'bedrock' &&
-				this.bot.blockAt(block.offset(0, 1, 1)).name === 'bedrock' &&
-				this.bot.blockAt(block.offset(-1, 1, 0)).name === 'bedrock' &&
-				this.bot.blockAt(block.offset(0, 1, -1)).name === 'bedrock'
-			)
-				holes.push(block)
-		}
+        if (player) return player
+        else return null
+    }
 
-		return holes
-	}
+    /**
+     * Gets holes near the bot.
+     *
+     * @returns An array of Vec3 positions
+     */
+    async getHoles() {
+        let holes: Vec3[] = []
 
-	private async start() {
-		if (this.started || !this.enabled) return
-		this.started = true
+        const blocks = this.bot.findBlocks({
+            point: this.bot.entity.position,
+            maxDistance: 10,
+            count: 2000,
+            matching: (block) => block.name === 'bedrock'
+        })
 
-		while (this.run) {
-			const player = await this.getNearestPlayer()
-			const crystal = this.bot.inventory.items().find((item) => item.name === 'end_crystal')
+        for (let index = 0; index < blocks.length; index++) {
+            const block = blocks[index]
 
-			if (player && crystal) {
-				if (!this.bot.heldItem || this.bot.heldItem.name !== crystal.name) this.bot.equip(crystal, 'hand')
+            if (
+                this.bot.blockAt(block.offset(0, 1, 0)).name === 'air' &&
+                this.bot.blockAt(block.offset(0, 2, 0)).name === 'air' &&
+                this.bot.blockAt(block.offset(0, 3, 0)).name === 'air' &&
+                this.bot.blockAt(block.offset(1, 1, 0)).name === 'bedrock' &&
+                this.bot.blockAt(block.offset(0, 1, 1)).name === 'bedrock' &&
+                this.bot.blockAt(block.offset(-1, 1, 0)).name === 'bedrock' &&
+                this.bot.blockAt(block.offset(0, 1, -1)).name === 'bedrock'
+            )
+                holes.push(block)
+        }
 
-				try {
-					await this.placeCrystal(player.position)
-					await this.breakCrystal()
-				} catch (e) {
-					this.run = false
-					console.error(e)
-				}
-			} else {
-				this.run = false
-			}
-		}
+        return holes
+    }
 
-		this.started = false
-		this.run = true
-	}
+    private async start() {
+        if (this.started || !this.enabled) return
+        this.started = true
 
-	private async stop() {
-		if (!this.enabled) return
+        // loop to start the auto crystal
+        while (this.run) {
+            const player = await this.getNearestPlayer()
+            const crystal = this.bot.inventory.items().find((item) => item.name === 'end_crystal')
 
-		this.run = false
-	}
+            if (player && crystal) {
+                if (!this.bot.heldItem || this.bot.heldItem.name !== crystal.name) this.bot.equip(crystal, 'hand')
 
-	/**
-	 * Disables the AutoCrystal
-	 */
-	async disable() {
-		if (!this.started) return
+                try {
+                    await this.bot.waitForTicks(this.options.delay)
+                    await this.placeCrystal(player.position)
+                    await this.breakCrystal()
+                } catch (e) {
+                    this.run = false
+                    console.error(e)
+                }
+            } else {
+                this.run = false
+            }
+        }
 
-		this.enabled = false
-	}
+        this.started = false
+        this.run = true
+    }
 
-	/**
-	 * Enables the AutoCrystal
-	 */
-	async enable() {
-		if (this.started) return
+    private async stop() {
+        if (!this.enabled) return
+        this.run = false
+    }
 
-		this.enabled = true
-	}
+    /**
+     * Disables the AutoCrystal
+     */
+    async disable() {
+        if (!this.started) return
+        this.enabled = false
+    }
+
+    /**
+     * Enables the AutoCrystal
+     */
+    async enable() {
+        if (this.started) return
+        this.enabled = true
+    }
 }
