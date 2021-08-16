@@ -6,14 +6,21 @@ interface MineflayerBot extends Bot {
     getExplosionDamages(entity: Entity, position: Vec3, raidus: number, rawDamages?: boolean): number
 }
 
+/**
+ * Options for the `AutoCrystal` class.
+ * @typedef {Object} Options
+ * @property {number} damageThreshold - If the damage exceeds the threshold, it will not place / break the crystal.
+ * @property {number} delay - The delay in ticks between each crystal placement.
+ * @property {string} placeMode - The mode used to place the crystal.
+ * @property {string} breakMode - The mode used to break the crystal.
+ */
 interface Options {
     /**
-     *  If the damage the bot would recieve is higher than this number,
-     *  it will not place / break the crystal depending on the modes that are set.
+     * If the damage exceeds the threshold, it will not place / break the crystal.
      */
     damageThreshold: number
     /**
-     * The delay in ticks between each check for the crystal.
+     * The delay in ticks between each crystal placement.
      */
     delay: number
     placeMode: 'suicide' | 'safe'
@@ -50,8 +57,8 @@ export class AutoCrystal {
     /**
      * Places a crystal close to the position if possible
      * @async
-     * @param {Vec3} A Vec3 position.
-     * @returns {Boolean} A boolean if it worked or not.
+     * @param {Vec3} position Vec3 position.
+     * @returns {boolean} A boolean if it worked or not.
      * @memberof AutoCrystal
      * @private
      */
@@ -104,7 +111,7 @@ export class AutoCrystal {
     /**
      * Breaks the nearest crystal
      * @async
-     * @returns {Boolean} A boolean if it worked or not
+     * @returns {boolean} A boolean if it worked or not
      * @memberof AutoCrystal
      * @private
      */
