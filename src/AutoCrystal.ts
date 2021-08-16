@@ -27,6 +27,7 @@ export class AutoCrystal {
     private enabled: boolean = false
 
     /**
+     * Initiates the AutoCrystal
      * @param {Options} options
      * @param {Bot} bot
      * @constructor
