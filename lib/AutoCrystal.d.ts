@@ -24,41 +24,74 @@ export declare class AutoCrystal {
     private run;
     private started;
     private enabled;
+    /**
+     * @param {Options} options
+     * @param {Bot} bot
+     * @constructor
+     * @private
+     */
     constructor(bot: MineflayerBot, options?: Options);
     /**
      * Places a crystal close to the position if possible
-     *
-     * @param Vec3 A Vec3 position.
-     *
-     * @returns A boolean if it worked or not.
+     * @async
+     * @param {Vec3} A Vec3 position.
+     * @returns {Boolean} A boolean if it worked or not.
+     * @memberof AutoCrystal
+     * @private
      */
     private placeCrystal;
     /**
      * Breaks the nearest crystal
-     *
-     * @returns A boolean if it worked or not
+     * @async
+     * @returns {Boolean} A boolean if it worked or not
+     * @memberof AutoCrystal
+     * @private
      */
     private breakCrystal;
     /**
      * Gets the nearest player
-     *
-     * @returns The nearest player entity object.
+     * @async
+     * @returns {Player} The nearest player entity object.
+     * @returns {null} If no player is found.
+     * @memberof AutoCrystal
+     * @private
      */
     private getNearestPlayer;
     /**
      * Gets holes near the bot.
-     *
-     * @returns An array of Vec3 positions
+     * @async
+     * @returns {Vec3[]} An array of Vec3 positions
+     * @memberof AutoCrystal
      */
     getHoles(): Promise<Vec3[]>;
+    /**
+     * Starts the auto crystal
+     * @async
+     * @returns {Promise<void>}
+     * @memberof AutoCrystal
+     * @private
+     */
     private start;
+    /**
+     * Stops the auto crystal
+     * @async
+     * @returns {Promise<void>}
+     * @memberof AutoCrystal
+     * @private
+     */
     private stop;
     /**
      * Disables the AutoCrystal
+     * @async
+     * @returns {Promise<void>}
+     * @memberof AutoCrystal
      */
     disable(): Promise<void>;
     /**
      * Enables the AutoCrystal
+     * @async
+     * @returns {Promise<void>}
+     * @memberof AutoCrystal
      */
     enable(): Promise<void>;
 }

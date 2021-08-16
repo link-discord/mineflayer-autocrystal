@@ -1,24 +1,26 @@
 {
-  "name": "mineflayer-autocrystal",
-  "version": "0.5.0",
-  "main": "lib/index.js",
-  "types": "lib/index.d.ts",
-  "dependencies": {
-    "mineflayer": "^3.9.0",
-    "prismarine-entity": "^1.2.0",
-    "sleep-promise": "^9.1.0",
-    "vec3": "^0.1.7"
-  },
-  "devDependencies": {
-    "@types/node": "^14.17.6"
-  },
-  "scripts": {
-    "build": "tsc",
-    "test": "tsc && cd examples && node example.js"
-  },
-  "keywords": [],
-  "author": "Link#0069",
-  "repository": "",
-  "license": "ISC",
-  "description": "mineflayer-autocrystal is a plugin that lets mineflayer bots automatically place and destroy end crystals."
+    "name": "mineflayer-autocrystal",
+    "version": "0.5.0",
+    "main": "lib/index.js",
+    "types": "lib/index.d.ts",
+    "dependencies": {
+        "mineflayer": "^3.9.0",
+        "prismarine-entity": "^1.2.0",
+        "sleep-promise": "^9.1.0",
+        "vec3": "^0.1.7"
+    },
+    "devDependencies": {
+        "@discordjs/docgen": "^0.10.0",
+        "@types/node": "^14.17.6"
+    },
+    "scripts": {
+        "build": "tsc",
+        "doc": "docgen --source lib --custom docs/index.yml --output docs/docs.json",
+        "test": "tsc && cd examples && node example.js"
+    },
+    "keywords": [],
+    "author": "Link#0069",
+    "repository": "",
+    "license": "ISC",
+    "description": "mineflayer-autocrystal is a plugin that lets mineflayer bots automatically place and destroy end crystals."
 }

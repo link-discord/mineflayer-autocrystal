@@ -26,12 +26,21 @@ export class AutoCrystal {
     private started: boolean = false
     private enabled: boolean = false
 
-    constructor(public bot: MineflayerBot, public options: Options = {
-        placeMode: 'safe',
-        breakMode: 'safe',
-        damageThreshold: 5,
-        delay: 1
-    }) {
+    /**
+     * @param {Options} options
+     * @param {Bot} bot
+     * @constructor
+     * @private
+     */
+    constructor(
+        public bot: MineflayerBot,
+        public options: Options = {
+            placeMode: 'safe',
+            breakMode: 'safe',
+            damageThreshold: 5,
+            delay: 1
+        }
+    ) {
         bot.on('physicsTick', () => {
             const player = this.getNearestPlayer()
 
@@ -42,10 +51,11 @@ export class AutoCrystal {
 
     /**
      * Places a crystal close to the position if possible
-     *
-     * @param Vec3 A Vec3 position.
-     *
-     * @returns A boolean if it worked or not.
+     * @async
+     * @param {Vec3} A Vec3 position.
+     * @returns {Boolean} A boolean if it worked or not.
+     * @memberof AutoCrystal
+     * @private
      */
     private async placeCrystal(position: Vec3): Promise<boolean> {
         if (!this.enabled) return false
@@ -95,10 +105,12 @@ export class AutoCrystal {
 
     /**
      * Breaks the nearest crystal
-     *
-     * @returns A boolean if it worked or not
+     * @async
+     * @returns {Boolean} A boolean if it worked or not
+     * @memberof AutoCrystal
+     * @private
      */
-    private async breakCrystal() {
+    private async breakCrystal(): Promise<boolean> {
         if (!this.enabled) return false
 
         await this.bot.waitForTicks(this.tick)
@@ -123,8 +135,11 @@ export class AutoCrystal {
 
     /**
      * Gets the nearest player
-     *
-     * @returns The nearest player entity object.
+     * @async
+     * @returns {Player} The nearest player entity object.
+     * @returns {null} If no player is found.
+     * @memberof AutoCrystal
+     * @private
      */
     private async getNearestPlayer(): Promise<Entity> {
         if (!this.enabled) return null
@@ -137,10 +152,11 @@ export class AutoCrystal {
 
     /**
      * Gets holes near the bot.
-     *
-     * @returns An array of Vec3 positions
+     * @async
+     * @returns {Vec3[]} An array of Vec3 positions
+     * @memberof AutoCrystal
      */
-    async getHoles() {
+    async getHoles(): Promise<Vec3[]> {
         let holes: Vec3[] = []
 
         const blocks = this.bot.findBlocks({
@@ -168,7 +184,14 @@ export class AutoCrystal {
         return holes
     }
 
-    private async start() {
+    /**
+     * Starts the auto crystal
+     * @async
+     * @returns {Promise<void>}
+     * @memberof AutoCrystal
+     * @private
+     */
+    private async start(): Promise<void> {
         if (this.started || !this.enabled) return
         this.started = true
 
@@ -197,23 +220,36 @@ export class AutoCrystal {
         this.run = true
     }
 
-    private async stop() {
+    /**
+     * Stops the auto crystal
+     * @async
+     * @returns {Promise<void>}
+     * @memberof AutoCrystal
+     * @private
+     */
+    private async stop(): Promise<void> {
         if (!this.enabled) return
         this.run = false
     }
 
     /**
      * Disables the AutoCrystal
+     * @async
+     * @returns {Promise<void>}
+     * @memberof AutoCrystal
      */
-    async disable() {
+    async disable(): Promise<void> {
         if (!this.started) return
         this.enabled = false
     }
 
     /**
      * Enables the AutoCrystal
+     * @async
+     * @returns {Promise<void>}
+     * @memberof AutoCrystal
      */
-    async enable() {
+    async enable(): Promise<void> {
         if (this.started) return
         this.enabled = true
     }
