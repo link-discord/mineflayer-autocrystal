@@ -11,32 +11,27 @@ interface Options {
      *  If the damage the bot would recieve is higher than this number,
      *  it will not place / break the crystal depending on the modes that are set.
      */
-    damageThreshold?: number
+    damageThreshold: number
     /**
      * The delay in ticks between each check for the crystal.
      */
-    delay?: number
-    placeMode?: 'suicide' | 'safe'
-    breakMode?: 'suicide' | 'safe'
+    delay: number
+    placeMode: 'suicide' | 'safe'
+    breakMode: 'suicide' | 'safe'
 }
 
 export class AutoCrystal {
-    private readonly bot: MineflayerBot
     private readonly tick: number = 50
     private run: boolean = true
     private started: boolean = false
     private enabled: boolean = false
-    private options: Options = {
+
+    constructor(public bot: MineflayerBot, public options: Options = {
         placeMode: 'safe',
         breakMode: 'safe',
         damageThreshold: 5,
         delay: 1
-    }
-
-    constructor(bot: MineflayerBot, options?: Options) {
-        this.bot = bot
-        this.options = options
-
+    }) {
         bot.on('physicsTick', () => {
             const player = this.getNearestPlayer()
 
@@ -69,8 +64,6 @@ export class AutoCrystal {
                 Math.round(block.distanceTo(position)) >= 1 &&
                 Math.round(block.distanceTo(position)) <= 10 &&
                 Math.round(this.bot.entity.position.y) <= position.y &&
-                Math.abs(Math.round(this.bot.entity.position.y) - Math.round(position.y)) <= 10 &&
-                Math.abs(Math.round(this.bot.entity.position.y) - Math.round(position.y)) >= 1 &&
                 this.bot.entity.position.xzDistanceTo(block) >= 1
         )
 
