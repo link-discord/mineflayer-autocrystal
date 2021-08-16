@@ -25,6 +25,7 @@ export declare class AutoCrystal {
     private started;
     private enabled;
     /**
+     * Initiates the AutoCrystal
      * @param {Options} options
      * @param {Bot} bot
      * @constructor
