@@ -1,1 +1,125 @@
-{"meta":{"generator":"0.10.0","format":20,"date":1629125463792},"custom":{"general":{"name":"General","files":{"welcome":{"name":"Welcome","type":"md","content":"<h1 align=\"center\">Welcome to mineflayer-autocrystal 👋</h1>\r\n<p>\r\n  <a href=\"https://www.npmjs.com/package/mineflayer-autocrystal\" target=\"_blank\">\r\n    <img alt=\"Version\" src=\"https://img.shields.io/npm/v/mineflayer-autocrystal.svg\">\r\n  </a>\r\n  <a href=\"https://github.com/LINKdiscordd/mineflayer-autocrystal#readme\" target=\"_blank\">\r\n    <img alt=\"Documentation\" src=\"https://img.shields.io/badge/documentation-yes-brightgreen.svg\" />\r\n  </a>\r\n  <a href=\"https://github.com/LINKdiscordd/mineflayer-autocrystal/graphs/commit-activity\" target=\"_blank\">\r\n    <img alt=\"Maintenance\" src=\"https://img.shields.io/badge/Maintained%3F-yes-green.svg\" />\r\n  </a>\r\n  <a href=\"https://github.com/LINKdiscordd/mineflayer-autocrystal/blob/master/LICENSE\" target=\"_blank\">\r\n    <img alt=\"License: ISC\" src=\"https://img.shields.io/github/license/LINKdiscordd/mineflayer-autocrystal\" />\r\n  </a>\r\n</p>\r\n\r\n> mineflayer-autocrystal is a plugin that lets mineflayer bots automatically place and destroy end crystals.\r\n\r\n### 🏠 [Homepage](https://github.com/LINKdiscordd/mineflayer-autocrystal)\r\n\r\n## Install\r\n\r\n```sh\r\nnpm install mineflayer-autocrystal\r\n```\r\n\r\n## Example\r\n\r\n```js\r\nconst mineflayer = require('mineflayer')\r\nconst { autoCrystal } = require('mineflayer-autocrystal')\r\n\r\nfunction main() {\r\n\tconst bot = mineflayer.createBot({\r\n\t\thost: 'localhost',\r\n\t\tusername: 'CrystalBot',\r\n\t})\r\n\r\n\tbot.loadPlugin(autoCrystal)\r\n\r\n\tbot.once('spawn', () => {\r\n\t\tconsole.clear()\r\n\t\tconsole.log('Spawned.')\r\n\t\tbot.chat('/gamemode creative')\r\n\t\tbot.chat('/give @s end_crystal 500')\r\n\t})\r\n\r\n\tbot.on('kicked', (reason) => {\r\n\t\tconsole.log(reason)\r\n\t\tmain()\r\n\t})\r\n\r\n\tbot.on('error', (reason) => {\r\n\t\tconsole.error(reason)\r\n\t\tmain()\r\n\t})\r\n\r\n\tbot.on('chat', async (username, message) => {\r\n\t\tif (username === bot.username) return\r\n\r\n\t\tswitch (message) {\r\n\t\t\tcase 'start':\r\n\t\t\t\tbot.chat('AutoCrystal enabled.')\r\n\t\t\t\tbot.autoCrystal.enable()\r\n\t\t\t\tbreak\r\n\r\n\t\t\tcase 'stop':\r\n\t\t\t\tbot.chat('AutoCrystal disabled.')\r\n\t\t\t\tbot.autoCrystal.disable()\r\n\t\t\t\tbreak\r\n\r\n\t\t\tcase 'holes':\r\n\t\t\t\tconst holes = await bot.autoCrystal.getHoles()\r\n\t\t\t\tbot.chat(`Found ${holes.length} holes made out of bedrock.`)\r\n\t\t\t\tbreak\r\n\r\n\t\t\tdefault:\r\n\t\t\t\tbreak\r\n\t\t}\r\n\t})\r\n}\r\n\r\nmain()\r\n```\r\n\r\n## Author\r\n\r\n👤 **Link#0069**\r\n\r\n* Github: [@LINKdiscordd](https://github.com/LINKdiscordd)\r\n\r\n## 🤝 Contributing\r\n\r\nContributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://github.com/LINKdiscordd/mineflayer-autocrystal/issues). \r\n\r\n## Show your support\r\n\r\nGive a ⭐️ if this project helped you!\r\n\r\n## 📝 License\r\n\r\nCopyright © 2021 [Link#0069](https://github.com/LINKdiscordd).<br />\r\nThis project is [GNU GPLv3](https://github.com/LINKdiscordd/mineflayer-autocrystal/blob/master/LICENSE) licensed.\r\n\r\n***\r\n_This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_\r\n","path":"README.md"}}}},"classes":[{"name":"AutoCrystal","access":"private","construct":{"name":"AutoCrystal","params":[{"name":"options","type":[[["Options"]]]},{"name":"bot","type":[[["Bot"]]]}]},"methods":[{"name":"placeCrystal","description":"Places a crystal close to the position if possible","access":"private","params":[{"name":"A","description":"Vec3 position.","type":[[["Vec3"]]]}],"async":true,"returns":{"types":[[["Boolean"]]],"description":"A boolean if it worked or not."},"meta":{"line":49,"file":"AutoCrystal.js","path":"lib"}},{"name":"breakCrystal","description":"Breaks the nearest crystal","access":"private","async":true,"returns":{"types":[[["Boolean"]]],"description":"A boolean if it worked or not"},"meta":{"line":90,"file":"AutoCrystal.js","path":"lib"}},{"name":"getNearestPlayer","description":"Gets the nearest player","access":"private","async":true,"returns":{"types":[[["Player"]]],"description":"The nearest player entity object."},"meta":{"line":118,"file":"AutoCrystal.js","path":"lib"}},{"name":"getHoles","description":"Gets holes near the bot.","async":true,"returns":{"types":[[["Array","<"],["Vec3",">"]]],"description":"An array of Vec3 positions"},"meta":{"line":135,"file":"AutoCrystal.js","path":"lib"}},{"name":"start","description":"Starts the auto crystal","access":"private","async":true,"returns":[[["Promise","<"],["void",">"]]],"meta":{"line":165,"file":"AutoCrystal.js","path":"lib"}},{"name":"stop","description":"Stops the auto crystal","access":"private","async":true,"returns":[[["Promise","<"],["void",">"]]],"meta":{"line":202,"file":"AutoCrystal.js","path":"lib"}},{"name":"disable","description":"Disables the AutoCrystal","async":true,"returns":[[["Promise","<"],["void",">"]]],"meta":{"line":215,"file":"AutoCrystal.js","path":"lib"}},{"name":"enable","description":"Enables the AutoCrystal","async":true,"returns":[[["Promise","<"],["void",">"]]],"meta":{"line":228,"file":"AutoCrystal.js","path":"lib"}}],"meta":{"line":21,"file":"AutoCrystal.js","path":"lib"}}],"interfaces":[],"typedefs":[],"externals":[]}
+{
+    "meta": { "generator": "0.10.0", "format": 20, "date": 1629126026022 },
+    "custom": {
+        "general": {
+            "name": "General",
+            "files": {
+                "welcome": {
+                    "name": "Welcome",
+                    "type": "md",
+                    "content": "<h1 align=\"center\">Welcome to mineflayer-autocrystal 👋</h1>\r\n<p>\r\n  <a href=\"https://www.npmjs.com/package/mineflayer-autocrystal\" target=\"_blank\">\r\n    <img alt=\"Version\" src=\"https://img.shields.io/npm/v/mineflayer-autocrystal.svg\">\r\n  </a>\r\n  <a href=\"https://github.com/LINKdiscordd/mineflayer-autocrystal#readme\" target=\"_blank\">\r\n    <img alt=\"Documentation\" src=\"https://img.shields.io/badge/documentation-yes-brightgreen.svg\" />\r\n  </a>\r\n  <a href=\"https://github.com/LINKdiscordd/mineflayer-autocrystal/graphs/commit-activity\" target=\"_blank\">\r\n    <img alt=\"Maintenance\" src=\"https://img.shields.io/badge/Maintained%3F-yes-green.svg\" />\r\n  </a>\r\n  <a href=\"https://github.com/LINKdiscordd/mineflayer-autocrystal/blob/master/LICENSE\" target=\"_blank\">\r\n    <img alt=\"License: ISC\" src=\"https://img.shields.io/github/license/LINKdiscordd/mineflayer-autocrystal\" />\r\n  </a>\r\n</p>\r\n\r\n> mineflayer-autocrystal is a plugin that lets mineflayer bots automatically place and destroy end crystals.\r\n\r\n### 🏠 [Homepage](https://github.com/LINKdiscordd/mineflayer-autocrystal)\r\n\r\n## Install\r\n\r\n```sh\r\nnpm install mineflayer-autocrystal\r\n```\r\n\r\n## Example\r\n\r\n```js\r\nconst mineflayer = require('mineflayer')\r\nconst { autoCrystal } = require('mineflayer-autocrystal')\r\n\r\nfunction main() {\r\n\tconst bot = mineflayer.createBot({\r\n\t\thost: 'localhost',\r\n\t\tusername: 'CrystalBot',\r\n\t})\r\n\r\n\tbot.loadPlugin(autoCrystal)\r\n\r\n\tbot.once('spawn', () => {\r\n\t\tconsole.clear()\r\n\t\tconsole.log('Spawned.')\r\n\t\tbot.chat('/gamemode creative')\r\n\t\tbot.chat('/give @s end_crystal 500')\r\n\t})\r\n\r\n\tbot.on('kicked', (reason) => {\r\n\t\tconsole.log(reason)\r\n\t\tmain()\r\n\t})\r\n\r\n\tbot.on('error', (reason) => {\r\n\t\tconsole.error(reason)\r\n\t\tmain()\r\n\t})\r\n\r\n\tbot.on('chat', async (username, message) => {\r\n\t\tif (username === bot.username) return\r\n\r\n\t\tswitch (message) {\r\n\t\t\tcase 'start':\r\n\t\t\t\tbot.chat('AutoCrystal enabled.')\r\n\t\t\t\tbot.autoCrystal.enable()\r\n\t\t\t\tbreak\r\n\r\n\t\t\tcase 'stop':\r\n\t\t\t\tbot.chat('AutoCrystal disabled.')\r\n\t\t\t\tbot.autoCrystal.disable()\r\n\t\t\t\tbreak\r\n\r\n\t\t\tcase 'holes':\r\n\t\t\t\tconst holes = await bot.autoCrystal.getHoles()\r\n\t\t\t\tbot.chat(`Found ${holes.length} holes made out of bedrock.`)\r\n\t\t\t\tbreak\r\n\r\n\t\t\tdefault:\r\n\t\t\t\tbreak\r\n\t\t}\r\n\t})\r\n}\r\n\r\nmain()\r\n```\r\n\r\n## Author\r\n\r\n👤 **Link#0069**\r\n\r\n* Github: [@LINKdiscordd](https://github.com/LINKdiscordd)\r\n\r\n## 🤝 Contributing\r\n\r\nContributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://github.com/LINKdiscordd/mineflayer-autocrystal/issues). \r\n\r\n## Show your support\r\n\r\nGive a ⭐️ if this project helped you!\r\n\r\n## 📝 License\r\n\r\nCopyright © 2021 [Link#0069](https://github.com/LINKdiscordd).<br />\r\nThis project is [GNU GPLv3](https://github.com/LINKdiscordd/mineflayer-autocrystal/blob/master/LICENSE) licensed.\r\n\r\n***\r\n_This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_\r\n",
+                    "path": "README.md"
+                }
+            }
+        }
+    },
+    "classes": [
+        {
+            "name": "AutoCrystal",
+            "access": "private",
+            "construct": {
+                "name": "AutoCrystal",
+                "params": [
+                    { "name": "options", "type": [[["Options"]]] },
+                    { "name": "bot", "type": [[["Bot"]]] }
+                ]
+            },
+            "methods": [
+                {
+                    "name": "placeCrystal",
+                    "description": "Places a crystal close to the position if possible",
+                    "access": "private",
+                    "params": [{ "name": "A", "description": "Vec3 position.", "type": [[["Vec3"]]] }],
+                    "async": true,
+                    "returns": { "types": [[["Boolean"]]], "description": "A boolean if it worked or not." },
+                    "meta": { "line": 49, "file": "AutoCrystal.js", "path": "lib" }
+                },
+                {
+                    "name": "breakCrystal",
+                    "description": "Breaks the nearest crystal",
+                    "access": "private",
+                    "async": true,
+                    "returns": { "types": [[["Boolean"]]], "description": "A boolean if it worked or not" },
+                    "meta": { "line": 90, "file": "AutoCrystal.js", "path": "lib" }
+                },
+                {
+                    "name": "getNearestPlayer",
+                    "description": "Gets the nearest player",
+                    "access": "private",
+                    "async": true,
+                    "returns": { "types": [[["Player"]]], "description": "The nearest player entity object." },
+                    "meta": { "line": 118, "file": "AutoCrystal.js", "path": "lib" }
+                },
+                {
+                    "name": "getHoles",
+                    "description": "Gets holes near the bot.",
+                    "async": true,
+                    "returns": {
+                        "types": [
+                            [
+                                ["Array", "<"],
+                                ["Vec3", ">"]
+                            ]
+                        ],
+                        "description": "An array of Vec3 positions"
+                    },
+                    "meta": { "line": 135, "file": "AutoCrystal.js", "path": "lib" }
+                },
+                {
+                    "name": "start",
+                    "description": "Starts the auto crystal",
+                    "access": "private",
+                    "async": true,
+                    "returns": [
+                        [
+                            ["Promise", "<"],
+                            ["void", ">"]
+                        ]
+                    ],
+                    "meta": { "line": 165, "file": "AutoCrystal.js", "path": "lib" }
+                },
+                {
+                    "name": "stop",
+                    "description": "Stops the auto crystal",
+                    "access": "private",
+                    "async": true,
+                    "returns": [
+                        [
+                            ["Promise", "<"],
+                            ["void", ">"]
+                        ]
+                    ],
+                    "meta": { "line": 202, "file": "AutoCrystal.js", "path": "lib" }
+                },
+                {
+                    "name": "disable",
+                    "description": "Disables the AutoCrystal",
+                    "async": true,
+                    "returns": [
+                        [
+                            ["Promise", "<"],
+                            ["void", ">"]
+                        ]
+                    ],
+                    "meta": { "line": 215, "file": "AutoCrystal.js", "path": "lib" }
+                },
+                {
+                    "name": "enable",
+                    "description": "Enables the AutoCrystal",
+                    "async": true,
+                    "returns": [
+                        [
+                            ["Promise", "<"],
+                            ["void", ">"]
+                        ]
+                    ],
+                    "meta": { "line": 228, "file": "AutoCrystal.js", "path": "lib" }
+                }
+            ],
+            "meta": { "line": 21, "file": "AutoCrystal.js", "path": "lib" }
+        }
+    ],
+    "interfaces": [],
+    "typedefs": [],
+    "externals": []
+}
