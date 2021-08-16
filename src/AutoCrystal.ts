@@ -6,14 +6,6 @@ interface MineflayerBot extends Bot {
     getExplosionDamages(entity: Entity, position: Vec3, raidus: number, rawDamages?: boolean): number
 }
 
-/**
- * Options for the `AutoCrystal` class.
- * @typedef {Object} Options
- * @property {number} damageThreshold - If the damage exceeds the threshold, it will not place / break the crystal.
- * @property {number} delay - The delay in ticks between each crystal placement.
- * @property {string} placeMode - The mode used to place the crystal.
- * @property {string} breakMode - The mode used to break the crystal.
- */
 interface Options {
     /**
      * If the damage exceeds the threshold, it will not place / break the crystal.
@@ -32,6 +24,15 @@ export class AutoCrystal {
     private run: boolean = true
     private started: boolean = false
     private enabled: boolean = false
+
+    /**
+     * Options for the `AutoCrystal` class.
+     * @typedef {Object} Options
+     * @property {number} damageThreshold - If the damage exceeds the threshold, it will not place / break the crystal.
+     * @property {number} delay - The delay in ticks between each crystal placement.
+     * @property {string} placeMode - The mode used to place the crystal.
+     * @property {string} breakMode - The mode used to break the crystal.
+     */
 
     /**
      * @param {Options} options
