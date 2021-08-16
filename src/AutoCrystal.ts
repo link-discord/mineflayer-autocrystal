@@ -30,7 +30,6 @@ export class AutoCrystal {
      * @param {Options} options
      * @param {Bot} bot
      * @constructor
-     * @private
      */
     constructor(
         public bot: MineflayerBot,
