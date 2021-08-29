@@ -5,14 +5,15 @@ interface MineflayerBot extends Bot {
     getExplosionDamages(entity: Entity, position: Vec3, raidus: number, rawDamages?: boolean): number;
 }
 interface Options {
+    ignoreInventoryCheck?: boolean;
     /**
      * If the damage exceeds the threshold, it will not place / break the crystal.
      */
-    damageThreshold: number;
+    damageThreshold?: number;
     /**
      * The delay in ticks between each crystal placement.
      */
-    delay: number;
+    delay?: number;
     placeMode: 'suicide' | 'safe';
     breakMode: 'suicide' | 'safe';
 }
