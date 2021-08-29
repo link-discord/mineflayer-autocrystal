@@ -18,6 +18,10 @@ function main() {
 		bot.chat('/give @s end_crystal 500')
 	})
 
+	bot.on('end', () => {
+		main()
+	})
+
 	bot.on('kicked', (reason) => {
 		console.log(reason)
 		main()

@@ -110,3 +110,5 @@ dist
 README.md
 .github
 .gitignore
+
+tests

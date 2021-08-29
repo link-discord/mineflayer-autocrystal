@@ -1,6 +1,6 @@
 {
     "name": "mineflayer-autocrystal",
-    "version": "0.6.1",
+    "version": "0.6.2",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "dependencies": {
@@ -10,12 +10,13 @@
     },
     "devDependencies": {
         "@discordjs/docgen": "^0.10.0",
-        "@types/node": "^14.17.6"
+        "@types/node": "^14.17.6",
+        "axios": "^0.21.1"
     },
     "scripts": {
         "build": "tsc",
         "doc": "npm run build && docgen --source lib --custom docs/index.yml --output docs/docs.json",
-        "test": "tsc && cd examples && node example.js"
+        "test": "cd tests && node index.js"
     },
     "keywords": [],
     "author": "Link#0069",

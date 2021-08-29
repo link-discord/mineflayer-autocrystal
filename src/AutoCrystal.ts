@@ -110,7 +110,7 @@ export class AutoCrystal {
                 await this.bot.lookAt(block, true)
                 await this.bot.placeEntity(this.bot.blockAt(block), new Vec3(0, 1, 0))
             } catch (error) {
-                if (this.options.logErrors) console.error(error)
+                if (this.options.logErrors) this.bot.emit('error', error)
             }
 
             return true
@@ -234,7 +234,7 @@ export class AutoCrystal {
                     await this.breakCrystal()
                 } catch (error) {
                     this.run = false
-                    if (this.options.logErrors) console.error(error)
+                    if (this.options.logErrors) this.bot.emit('error', error)
                 }
             } else {
                 this.run = false
