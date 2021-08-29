@@ -96,10 +96,12 @@ export class AutoCrystal {
         if ((blocks && blocks.length > 1 && this.bot.blockAt(block).name === 'obsidian') || this.bot.blockAt(block).name === 'bedrock') {
             try {
                 if (
-                    (this.options.placeMode === 'safe' && damage > this.options.damageThreshold) ||
-                    (this.options.placeMode === 'safe' && damage >= this.bot.health)
-                )
+                    this.options.placeMode === 'safe' &&
+                    this.bot.game.difficulty !== 'peaceful' &&
+                    (damage > this.options.damageThreshold || damage >= this.bot.health)
+                ) {
                     return false
+                }
 
                 await this.bot.lookAt(block, true)
                 await this.bot.placeEntity(this.bot.blockAt(block), new Vec3(0, 1, 0))
@@ -124,15 +126,19 @@ export class AutoCrystal {
         await this.bot.waitForTicks(this.tick)
         const crystal = this.bot.nearestEntity((entity) => entity.name === 'end_crystal')
 
+        if (!crystal) return false
+
         const damage = this.bot.getExplosionDamages(this.bot.entity, crystal.position, 6)
 
         if (crystal) {
             // check if safe mode is turned on
             if (
-                (this.options.breakMode === 'safe' && damage > this.options.damageThreshold) ||
-                (this.options.breakMode === 'safe' && damage >= this.bot.health)
-            )
+                this.options.breakMode === 'safe' &&
+                this.bot.game.difficulty !== 'peaceful' &&
+                (damage > this.options.damageThreshold || damage >= this.bot.health)
+            ) {
                 return false
+            }
 
             await this.bot.activateEntity(crystal)
             return true
