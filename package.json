@@ -4,9 +4,8 @@
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "dependencies": {
-        "mineflayer": "^3.9.0",
+        "mineflayer": "^3.11.0",
         "prismarine-entity": "^1.2.0",
-        "sleep-promise": "^9.1.0",
         "vec3": "^0.1.7"
     },
     "devDependencies": {
