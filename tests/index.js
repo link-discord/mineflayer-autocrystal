@@ -5,8 +5,6 @@ const { autoCrystal } = require('../lib/index')
 async function main() {
     const { data } = await axios.get(`${process.env.API}/minecraft`)
 
-    console.log(data)
-
     const bot1 = mineflayer.createBot({
         host: data.ip,
         port: data.port,
