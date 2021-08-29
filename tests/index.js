@@ -9,7 +9,7 @@ async function main() {
         host: data.ip,
         port: data.port,
         username: 'bot1'
-    }) 
+    })
 
     bot1.loadPlugin(autoCrystal)
 
@@ -51,9 +51,9 @@ async function main() {
         bot1.autoCrystal.options.breakMode = 'suicide'
 
         bot1.chat('/tp 0 4 0')
+        bot1.chat('/kill @e[type=minecraft:item]')
 
         setTimeout(() => {
-            bot1.chat('/tp @s 0 4 0')
             bot1.chat('/give @s minecraft:end_crystal 100')
             bot1.chat('/fill 0 10 0 0 10 0 minecraft:bedrock')
             bot1.chat('/fill 2 10 0 2 10 0 minecraft:bedrock')
