@@ -7,14 +7,15 @@ interface MineflayerBot extends Bot {
 }
 
 interface Options {
+    ignoreInventoryCheck?: boolean
     /**
      * If the damage exceeds the threshold, it will not place / break the crystal.
      */
-    damageThreshold: number
+    damageThreshold?: number
     /**
      * The delay in ticks between each crystal placement.
      */
-    delay: number
+    delay?: number
     placeMode: 'suicide' | 'safe'
     breakMode: 'suicide' | 'safe'
 }
@@ -41,6 +42,7 @@ export class AutoCrystal {
     constructor(
         public bot: MineflayerBot,
         public options: Options = {
+            ignoreInventoryCheck: true,
             placeMode: 'safe',
             breakMode: 'safe',
             damageThreshold: 5,
@@ -208,8 +210,13 @@ export class AutoCrystal {
 
             if (player && crystal) {
                 if (!this.bot.heldItem || this.bot.heldItem.name !== crystal.name) {
-                    this.bot.inventory.requiresConfirmation = false
-                    this.bot.equip(crystal, 'hand')
+                    const requiresConfirmation = this.bot.inventory.requiresConfirmation
+
+                    if (this.options.ignoreInventoryCheck) this.bot.inventory.requiresConfirmation = false
+
+                    this.bot.inventory.requiresConfirmation = requiresConfirmation
+
+                    await this.bot.equip(crystal, 'hand')
                 }
 
                 try {
