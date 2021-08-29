@@ -33,7 +33,7 @@ async function main() {
 
     let playerDied = false
 
-    bot1.once('entityDead', (entity) => {
+    function handleDeath(entity) {
         if (entity.type !== 'player') return
 
         playerDied = true
@@ -42,7 +42,10 @@ async function main() {
 
         console.log('Test passed.')
         process.exit(0)
-    })
+    }
+
+    bot1.once('entityDead', handleDeath)
+    bot1.once('entityGone', handleDeath)
 
     bot1.once('spawn', async () => {
         bot1.autoCrystal.options.logErrors = true
