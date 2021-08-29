@@ -31,19 +31,14 @@ async function main() {
 
     let playerDied = false
 
-    function handleDeath(entity) {
-        if (entity.type !== 'player') return
-
+    bot2.once('death', () => {
         playerDied = true
 
         bot1.chat('/fill -10 4 -10 10 30 10 minecraft:air')
 
         console.log('Test passed.')
         process.exit(0)
-    }
-
-    bot1.once('entityDead', handleDeath)
-    bot1.once('entityGone', handleDeath)
+    })
 
     bot1.once('spawn', async () => {
         bot1.autoCrystal.options.logErrors = true
@@ -82,7 +77,10 @@ async function main() {
     })
 
     bot2.once('spawn', async () => {
+        bot2.chat('/gamemode creative')
+
         setTimeout(() => {
+            bot2.chat('/gamemode survival')
             bot2.chat('/tp @s 4 11 0')
         }, 9 * 1000)
     })
