@@ -44,7 +44,7 @@ export class AutoCrystal {
             placeMode: 'safe',
             breakMode: 'safe',
             damageThreshold: 5,
-            delay: 1
+            delay: 2
         }
     ) {
         bot.on('physicsTick', () => {
@@ -207,7 +207,10 @@ export class AutoCrystal {
             const crystal = this.bot.inventory.items().find((item) => item.name === 'end_crystal')
 
             if (player && crystal) {
-                if (!this.bot.heldItem || this.bot.heldItem.name !== crystal.name) this.bot.equip(crystal, 'hand')
+                if (!this.bot.heldItem || this.bot.heldItem.name !== crystal.name) {
+                    this.bot.inventory.requiresConfirmation = false
+                    this.bot.equip(crystal, 'hand')
+                }
 
                 try {
                     await this.bot.waitForTicks(this.options.delay)
