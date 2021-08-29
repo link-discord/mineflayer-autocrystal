@@ -29,8 +29,10 @@ export class AutoCrystal {
     /**
      * Options for the `AutoCrystal` class.
      * @typedef {Object} Options
-     * @property {number} damageThreshold - If the damage exceeds the threshold, it will not place / break the crystal.
-     * @property {number} delay - The delay in ticks between each crystal placement.
+     * @property {boolean} [ignoreInventoryCheck=true] If the inventory check should be ignored.
+     * @property {boolean} [logErrors=false] If errors should be logged.
+     * @property {number} [damageThreshold=5] - If the damage exceeds the threshold, it will not place / break the crystal.
+     * @property {number} [delay=1] - The delay in ticks between each crystal placement.
      * @property {string} placeMode - The mode used to place the crystal.
      * @property {string} breakMode - The mode used to break the crystal.
      */
