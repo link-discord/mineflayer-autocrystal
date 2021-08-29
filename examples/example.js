@@ -10,6 +10,8 @@ function main() {
 	bot.loadPlugin(autoCrystal)
 
 	bot.once('spawn', () => {
+		bot.autoCrystal.options.logErrors = true
+
 		console.clear()
 		console.log('Spawned.')
 		bot.chat('/gamemode creative')
@@ -32,12 +34,12 @@ function main() {
 		switch (message) {
 			case 'start':
 				bot.chat('AutoCrystal enabled.')
-				bot.autoCrystal.enable()
+				await bot.autoCrystal.enable()
 				break
 
 			case 'stop':
 				bot.chat('AutoCrystal disabled.')
-				bot.autoCrystal.disable()
+				await bot.autoCrystal.disable()
 				break
 
 			case 'holes':

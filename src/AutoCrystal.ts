@@ -8,6 +8,7 @@ interface MineflayerBot extends Bot {
 
 interface Options {
     ignoreInventoryCheck?: boolean
+    logErrors?: boolean
     /**
      * If the damage exceeds the threshold, it will not place / break the crystal.
      */
@@ -21,7 +22,6 @@ interface Options {
 }
 
 export class AutoCrystal {
-    private readonly tick: number = 50
     private run: boolean = true
     private started: boolean = false
     private enabled: boolean = false
@@ -43,16 +43,18 @@ export class AutoCrystal {
         public bot: MineflayerBot,
         public options: Options = {
             ignoreInventoryCheck: true,
+            logErrors: false,
             placeMode: 'safe',
             breakMode: 'safe',
             damageThreshold: 5,
-            delay: 2
+            delay: 1
         }
     ) {
         bot.on('physicsTick', () => {
             const player = this.getNearestPlayer()
 
-            if (player && !this.started && this.enabled) this.start()
+            if (!this.enabled && this.started) this.stop()
+            else if (player && !this.started && this.enabled) this.start()
             else if (!player && this.started && this.enabled) this.stop()
         })
     }
@@ -79,10 +81,10 @@ export class AutoCrystal {
 
         blocks = blocks.filter(
             (block) =>
-                Math.round(block.distanceTo(position)) >= 1 &&
+                Math.round(block.distanceTo(position)) >= 1.3 &&
                 Math.round(block.distanceTo(position)) <= 10 &&
                 Math.round(this.bot.entity.position.y) <= position.y &&
-                this.bot.entity.position.xzDistanceTo(block) >= 1
+                this.bot.entity.position.xzDistanceTo(block) >= 1.3
         )
 
         blocks = blocks.filter((block) => this.bot.blockAt(block.offset(0, 1, 0)).name === 'air')
@@ -91,9 +93,9 @@ export class AutoCrystal {
 
         if (!block || !this.bot.blockAt(block)) return null
 
-        const damage = this.bot.getExplosionDamages(this.bot.entity, block.offset(0, 1, 0), 6)
+        const damage = this.bot.getExplosionDamages(this.bot.entity, block.offset(0, 1, 0), 6, true)
 
-        if ((blocks && blocks.length > 1 && this.bot.blockAt(block).name === 'obsidian') || this.bot.blockAt(block).name === 'bedrock') {
+        if ((blocks && blocks.length >= 1 && this.bot.blockAt(block).name === 'obsidian') || this.bot.blockAt(block).name === 'bedrock') {
             try {
                 if (
                     this.options.placeMode === 'safe' &&
@@ -105,7 +107,9 @@ export class AutoCrystal {
 
                 await this.bot.lookAt(block, true)
                 await this.bot.placeEntity(this.bot.blockAt(block), new Vec3(0, 1, 0))
-            } catch (error) {}
+            } catch (error) {
+                if (this.options.logErrors) console.error(error)
+            }
 
             return true
         }
@@ -123,15 +127,11 @@ export class AutoCrystal {
     private async breakCrystal(): Promise<boolean> {
         if (!this.enabled) return false
 
-        await this.bot.waitForTicks(this.tick)
         const crystal = this.bot.nearestEntity((entity) => entity.name === 'end_crystal')
 
-        if (!crystal) return false
-
-        const damage = this.bot.getExplosionDamages(this.bot.entity, crystal.position, 6)
-
         if (crystal) {
-            // check if safe mode is turned on
+            const damage = this.bot.getExplosionDamages(this.bot.entity, crystal.position, 6, true)
+
             if (
                 this.options.breakMode === 'safe' &&
                 this.bot.game.difficulty !== 'peaceful' &&
@@ -140,7 +140,8 @@ export class AutoCrystal {
                 return false
             }
 
-            await this.bot.activateEntity(crystal)
+            await this.bot.waitForTicks(1)
+            this.bot.attack(crystal)
             return true
         } else {
             return false
@@ -210,7 +211,7 @@ export class AutoCrystal {
         this.started = true
 
         // loop to start the auto crystal
-        while (this.run) {
+        while (this.run && this.enabled) {
             const player = await this.getNearestPlayer()
             const crystal = this.bot.inventory.items().find((item) => item.name === 'end_crystal')
 
@@ -229,9 +230,9 @@ export class AutoCrystal {
                     await this.bot.waitForTicks(this.options.delay)
                     await this.placeCrystal(player.position)
                     await this.breakCrystal()
-                } catch (e) {
+                } catch (error) {
                     this.run = false
-                    console.error(e)
+                    if (this.options.logErrors) console.error(error)
                 }
             } else {
                 this.run = false
@@ -257,22 +258,23 @@ export class AutoCrystal {
     /**
      * Disables the AutoCrystal
      * @async
-     * @returns {Promise<void>}
+     * @returns {Promise<boolean>}
      * @memberof AutoCrystal
      */
-    async disable(): Promise<void> {
-        if (!this.started) return
+    async disable(): Promise<boolean> {
         this.enabled = false
+        return true
     }
 
     /**
      * Enables the AutoCrystal
      * @async
-     * @returns {Promise<void>}
+     * @returns {Promise<boolean>}
      * @memberof AutoCrystal
      */
-    async enable(): Promise<void> {
-        if (this.started) return
+    async enable(): Promise<boolean> {
+        if (this.started) return false
         this.enabled = true
+        return true
     }
 }

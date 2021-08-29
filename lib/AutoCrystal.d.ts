@@ -6,6 +6,7 @@ interface MineflayerBot extends Bot {
 }
 interface Options {
     ignoreInventoryCheck?: boolean;
+    logErrors?: boolean;
     /**
      * If the damage exceeds the threshold, it will not place / break the crystal.
      */
@@ -20,7 +21,6 @@ interface Options {
 export declare class AutoCrystal {
     bot: MineflayerBot;
     options: Options;
-    private readonly tick;
     private run;
     private started;
     private enabled;
@@ -89,16 +89,16 @@ export declare class AutoCrystal {
     /**
      * Disables the AutoCrystal
      * @async
-     * @returns {Promise<void>}
+     * @returns {Promise<boolean>}
      * @memberof AutoCrystal
      */
-    disable(): Promise<void>;
+    disable(): Promise<boolean>;
     /**
      * Enables the AutoCrystal
      * @async
-     * @returns {Promise<void>}
+     * @returns {Promise<boolean>}
      * @memberof AutoCrystal
      */
-    enable(): Promise<void>;
+    enable(): Promise<boolean>;
 }
 export {};
