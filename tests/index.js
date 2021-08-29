@@ -9,7 +9,7 @@ async function main() {
         host: data.ip,
         port: data.port,
         username: 'bot1'
-    })
+    }) 
 
     bot1.loadPlugin(autoCrystal)
 
