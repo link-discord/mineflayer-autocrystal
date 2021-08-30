@@ -39,8 +39,10 @@ async function main() {
 
         bot1.chat('/fill -10 4 -10 10 30 10 minecraft:air')
 
-        console.log('Test passed.')
-        process.exit(0)
+        setTimeout(() => {
+            console.log('Test passed.')
+            process.exit(0)
+        }, 100)
     })
 
     bot1.once('spawn', async () => {
