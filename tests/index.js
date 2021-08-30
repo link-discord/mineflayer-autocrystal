@@ -61,7 +61,7 @@ async function main() {
         bot1.autoCrystal.options.placeMode = 'suicide'
         bot1.autoCrystal.options.breakMode = 'suicide'
 
-        console.log('[Bot (1)] Teleported to 0 4 0')
+        console.log('[Bot (1)] Teleported to 0 4 0') 
 
         setTimeout(() => {
             bot1.chat('/give @s minecraft:end_crystal 100')
