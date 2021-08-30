@@ -129,29 +129,23 @@ export class AutoCrystal {
      * @memberof AutoCrystal
      * @private
      */
-    private async breakCrystal(): Promise<boolean> {
+    private async breakCrystal(crystal: Entity): Promise<boolean> {
         if (!this.enabled) return false
 
-        const crystal = this.bot.nearestEntity((entity) => entity.name === 'end_crystal')
+        const damage = this.bot.getExplosionDamages(this.bot.entity, crystal.position, 6, true)
 
-        if (crystal) {
-            const damage = this.bot.getExplosionDamages(this.bot.entity, crystal.position, 6, true)
-
-            if (
-                this.options.breakMode === 'safe' &&
-                this.bot.game.difficulty !== 'peaceful' &&
-                (damage > this.options.damageThreshold || damage >= this.bot.health)
-            ) {
-                return false
-            }
-
-            await sleep(50)
-
-            this.bot.attack(crystal)
-            return true
-        } else {
+        if (
+            this.options.breakMode === 'safe' &&
+            this.bot.game.difficulty !== 'peaceful' &&
+            (damage > this.options.damageThreshold || damage >= this.bot.health)
+        ) {
             return false
         }
+
+        await sleep(50)
+
+        this.bot.attack(crystal)
+        return true
     }
 
     /**
@@ -232,10 +226,18 @@ export class AutoCrystal {
                     await this.bot.equip(crystal, 'hand')
                 }
 
+                let crystal_entity = this.bot.nearestEntity((entity) => entity.name === 'end_crystal')
+
                 try {
                     await sleep(this.options.delay * 50)
+
+                    if (crystal_entity) await this.breakCrystal(crystal_entity)
+
                     await this.placeCrystal(player.position)
-                    await this.breakCrystal()
+
+                    crystal_entity = this.bot.nearestEntity((entity) => entity.name === 'end_crystal')
+
+                    if (crystal_entity) await this.breakCrystal(crystal_entity)
                 } catch (error) {
                     this.run = false
                     if (this.options.logErrors) this.bot.emit('error', error)

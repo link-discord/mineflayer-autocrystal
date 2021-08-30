@@ -62,15 +62,15 @@ async function main() {
 
         setTimeout(() => {
             bot1.chat('/give @s minecraft:end_crystal 100')
-            bot1.chat('/fill 0 10 0 0 10 0 minecraft:bedrock')
-            bot1.chat('/fill 2 10 0 2 10 0 minecraft:bedrock')
-            bot1.chat('/fill 2 10 0 3 10 0 minecraft:bedrock')
-            bot1.chat('/fill 3 10 0 4 10 0 minecraft:bedrock')
+            bot1.chat('/fill 0 11 0 0 11 0 minecraft:bedrock')
+            bot1.chat('/fill 2 11 0 2 11 0 minecraft:bedrock')
+            bot1.chat('/fill 2 11 0 3 11 0 minecraft:bedrock')
+            bot1.chat('/fill 3 11 0 4 11 0 minecraft:bedrock')
             console.log('[Bot (1)] Platforms have been created.')
         }, 4 * 1000)
 
         setTimeout(() => {
-            bot1.chat('/tp @s 0 11 0')
+            bot1.chat('/tp @s 0 12 0')
             console.log('[Bot (1)] Teleported to the platform.')
         }, 6 * 1000)
 
@@ -91,7 +91,7 @@ async function main() {
                 bot1.chat('Test has failed.')
 
                 setTimeout(() => {
-                    bot1.chat('/fill -10 4 -10 10 30 10 minecraft:air')
+                    bot1.chat('/fill -10 5 -10 12 30 10 minecraft:air')
                     console.log('Cleanup is complete.')
                 }, 200)
 
@@ -110,8 +110,8 @@ async function main() {
 
         setTimeout(() => {
             bot2.chat('/gamemode survival')
-            bot2.chat('/tp @s 4 11 0')
-            console.log('[Bot (2)] Teleported to 4 11 0 and now in survival mode.')
+            bot2.chat('/tp @s 4 12 0')
+            console.log('[Bot (2)] Teleported to the platform and now in survival mode.')
         }, 8 * 1000)
     })
 }
