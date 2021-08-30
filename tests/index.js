@@ -30,8 +30,11 @@ async function main() {
     })
 
     let playerDied = false
+    let caEnabled = false
 
-    bot2.once('death', () => {
+    bot2.on('death', () => {
+        if (!caEnabled) return
+
         playerDied = true
 
         bot1.chat('/fill -10 4 -10 10 30 10 minecraft:air')
@@ -63,11 +66,14 @@ async function main() {
         setTimeout(() => {
             bot1.chat('/gamemode creative')
             bot1.autoCrystal.enable()
+            caEnabled = true
         }, 11 * 1000)
 
         setTimeout(() => {
             bot1.chat('/gamemode survival')
             bot1.autoCrystal.disable()
+
+            caEnabled = false
 
             if (!playerDied) {
                 console.log('Test failed.')
