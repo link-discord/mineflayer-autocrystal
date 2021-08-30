@@ -266,7 +266,7 @@ export class AutoCrystal {
     async disable(): Promise<boolean> {
         this.enabled = false
         return true
-    }
+    } 
 
     /**
      * Enables the AutoCrystal
