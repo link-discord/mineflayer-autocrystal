@@ -28,21 +28,26 @@ npm install mineflayer-autocrystal
 
 ```js
 const mineflayer = require('mineflayer')
-const { autoCrystal } = require('mineflayer-autocrystal')
+const { autoCrystal } = require('../lib/index')
 
 function main() {
 	const bot = mineflayer.createBot({
 		host: 'localhost',
-		username: 'CrystalBot',
+		username: 'AutoCrystal',
 	})
 
 	bot.loadPlugin(autoCrystal)
 
 	bot.once('spawn', () => {
+		bot.autoCrystal.options.logErrors = true
 		console.clear()
 		console.log('Spawned.')
 		bot.chat('/gamemode creative')
 		bot.chat('/give @s end_crystal 500')
+	})
+
+	bot.on('end', () => {
+		main()
 	})
 
 	bot.on('kicked', (reason) => {
@@ -61,12 +66,12 @@ function main() {
 		switch (message) {
 			case 'start':
 				bot.chat('AutoCrystal enabled.')
-				bot.autoCrystal.enable()
+				await bot.autoCrystal.enable()
 				break
 
 			case 'stop':
 				bot.chat('AutoCrystal disabled.')
-				bot.autoCrystal.disable()
+				await bot.autoCrystal.disable()
 				break
 
 			case 'holes':
