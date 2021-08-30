@@ -1,9 +1,6 @@
 import { Bot } from 'mineflayer'
 import { Entity } from 'prismarine-entity'
 import { Vec3 } from 'vec3'
-import { promisify } from 'util'
-
-const sleep = promisify(setTimeout)
 
 interface MineflayerBot extends Bot {
     getExplosionDamages(entity: Entity, position: Vec3, raidus: number, rawDamages?: boolean): number
@@ -129,18 +126,14 @@ export class AutoCrystal {
      * @memberof AutoCrystal
      * @private
      */
-    private async breakCrystal(crystal: Entity): Promise<boolean> {
+    private async breakCrystal(): Promise<boolean> {
         if (!this.enabled) return false
 
-        const damage = this.bot.getExplosionDamages(this.bot.entity, crystal.position, 6, true)
+        const crystal = this.bot.nearestEntity((entity) => entity.name === 'end_crystal')
 
-<<<<<<< HEAD
-        if (
-            this.options.breakMode === 'safe' &&
-            this.bot.game.difficulty !== 'peaceful' &&
-            (damage > this.options.damageThreshold || damage >= this.bot.health)
-        ) {
-=======
+        if (crystal) {
+            const damage = this.bot.getExplosionDamages(this.bot.entity, crystal.position, 6, true)
+
             if (
                 this.options.breakMode === 'safe' &&
                 this.bot.game.difficulty !== 'peaceful' &&
@@ -153,14 +146,8 @@ export class AutoCrystal {
             this.bot.attack(crystal)
             return true
         } else {
->>>>>>> parent of 2383445 (Change how delay is handled)
             return false
         }
-
-        await sleep(50)
-
-        this.bot.attack(crystal)
-        return true
     }
 
     /**
@@ -241,24 +228,10 @@ export class AutoCrystal {
                     await this.bot.equip(crystal, 'hand')
                 }
 
-                let crystal_entity = this.bot.nearestEntity((entity) => entity.name === 'end_crystal')
-
                 try {
-<<<<<<< HEAD
-                    await sleep(this.options.delay * 50)
-
-                    if (crystal_entity) await this.breakCrystal(crystal_entity)
-
-                    await this.placeCrystal(player.position)
-
-                    crystal_entity = this.bot.nearestEntity((entity) => entity.name === 'end_crystal')
-
-                    if (crystal_entity) await this.breakCrystal(crystal_entity)
-=======
                     await this.bot.waitForTicks(this.options.delay)
                     await this.placeCrystal(player.position)
                     await this.breakCrystal()
->>>>>>> parent of 2383445 (Change how delay is handled)
                 } catch (error) {
                     this.run = false
                     if (this.options.logErrors) this.bot.emit('error', error)
