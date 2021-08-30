@@ -142,14 +142,13 @@ export class AutoCrystal {
                 return false
             }
 
-            await this.bot.waitForTicks(this.options.delay)
-
+            await this.bot.waitForTicks(1)
             this.bot.attack(crystal)
             return true
         } else {
             return false
         }
-    } 
+    }
 
     /**
      * Gets the nearest player
@@ -230,6 +229,7 @@ export class AutoCrystal {
                 }
 
                 try {
+                    await this.bot.waitForTicks(this.options.delay)
                     await this.placeCrystal(player.position)
                     await this.breakCrystal()
                 } catch (error) {
