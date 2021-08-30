@@ -142,6 +142,8 @@ export class AutoCrystal {
                 return false
             }
 
+            await this.bot.waitForTicks(this.options.delay)
+
             this.bot.attack(crystal)
             return true
         } else {
@@ -229,12 +231,11 @@ export class AutoCrystal {
 
                 try {
                     await this.placeCrystal(player.position)
-                    await this.bot.waitForTicks(this.options.delay)
                     await this.breakCrystal()
                 } catch (error) {
                     this.run = false
                     if (this.options.logErrors) this.bot.emit('error', error)
-                } 
+                }
             } else {
                 this.run = false
             }
