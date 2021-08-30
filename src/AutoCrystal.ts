@@ -134,11 +134,26 @@ export class AutoCrystal {
 
         const damage = this.bot.getExplosionDamages(this.bot.entity, crystal.position, 6, true)
 
+<<<<<<< HEAD
         if (
             this.options.breakMode === 'safe' &&
             this.bot.game.difficulty !== 'peaceful' &&
             (damage > this.options.damageThreshold || damage >= this.bot.health)
         ) {
+=======
+            if (
+                this.options.breakMode === 'safe' &&
+                this.bot.game.difficulty !== 'peaceful' &&
+                (damage > this.options.damageThreshold || damage >= this.bot.health)
+            ) {
+                return false
+            }
+
+            await this.bot.waitForTicks(1)
+            this.bot.attack(crystal)
+            return true
+        } else {
+>>>>>>> parent of 2383445 (Change how delay is handled)
             return false
         }
 
@@ -229,6 +244,7 @@ export class AutoCrystal {
                 let crystal_entity = this.bot.nearestEntity((entity) => entity.name === 'end_crystal')
 
                 try {
+<<<<<<< HEAD
                     await sleep(this.options.delay * 50)
 
                     if (crystal_entity) await this.breakCrystal(crystal_entity)
@@ -238,6 +254,11 @@ export class AutoCrystal {
                     crystal_entity = this.bot.nearestEntity((entity) => entity.name === 'end_crystal')
 
                     if (crystal_entity) await this.breakCrystal(crystal_entity)
+=======
+                    await this.bot.waitForTicks(this.options.delay)
+                    await this.placeCrystal(player.position)
+                    await this.breakCrystal()
+>>>>>>> parent of 2383445 (Change how delay is handled)
                 } catch (error) {
                     this.run = false
                     if (this.options.logErrors) this.bot.emit('error', error)
