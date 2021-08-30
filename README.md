@@ -12,12 +12,13 @@
   <a href="https://github.com/LINKdiscordd/mineflayer-autocrystal/blob/master/LICENSE" target="_blank">
     <img alt="License: ISC" src="https://img.shields.io/github/license/LINKdiscordd/mineflayer-autocrystal" />
   </a>
-  [![Autocrystal CI](https://github.com/link-discord/mineflayer-autocrystal/actions/workflows/ci.yml/badge.svg)](https://github.com/link-discord/mineflayer-autocrystal/actions/workflows/ci.yml)
 </p>
 
 > mineflayer-autocrystal is a plugin that lets mineflayer bots automatically place and destroy end crystals.
 
 ### 🏠 [Homepage](https://github.com/LINKdiscordd/mineflayer-autocrystal)
+
+[![Autocrystal CI](https://github.com/link-discord/mineflayer-autocrystal/actions/workflows/ci.yml/badge.svg)](https://github.com/link-discord/mineflayer-autocrystal/actions/workflows/ci.yml)
 
 ## Install
 
