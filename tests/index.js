@@ -2,6 +2,12 @@ const axios = require('axios').default
 const mineflayer = require('mineflayer')
 const { autoCrystal } = require('../lib/index')
 
+function cleanup(bot) {
+    bot.chat('/gamemode survival')
+    bot.chat('/fill -10 4 -10 10 30 10 minecraft:air')
+    bot.chat('/kill @e[type=!minecraft:player]')
+}
+
 async function main() {
     const { data } = await axios.get(`${process.env.API}/minecraft`)
 
@@ -37,12 +43,10 @@ async function main() {
 
         playerDied = true
 
-        bot1.chat('/gamemode survival')
         bot1.chat('Test has been succesful.')
 
         setTimeout(() => {
-            bot1.chat('/fill -10 4 -10 10 30 10 minecraft:air')
-            bot1.chat('/kill @e[type=!minecraft:player]')
+            cleanup(bot1)
             console.log('Cleanup is complete.')
         }, 200)
 
@@ -57,9 +61,7 @@ async function main() {
         bot1.autoCrystal.options.placeMode = 'suicide'
         bot1.autoCrystal.options.breakMode = 'suicide'
 
-        bot1.chat('/kill @e[type=!minecraft:player]')
-        bot1.chat('/fill -10 5 -10 12 30 10 minecraft:air')
-        bot1.chat('/tp 0 4 0')
+        cleanup(bot1)
 
         console.log('[Bot (1)] Teleported to 0 4 0')
 
@@ -85,7 +87,6 @@ async function main() {
         }, 10 * 1000)
 
         setTimeout(() => {
-            bot1.chat('/gamemode survival')
             bot1.autoCrystal.disable()
 
             caEnabled = false
@@ -94,9 +95,7 @@ async function main() {
                 bot1.chat('Test has failed.')
 
                 setTimeout(() => {
-                    bot1.chat('/fill -10 5 -10 12 30 10 minecraft:air')
-                    bot1.chat('/kill @e[type=!minecraft:player]')
-                    console.log('Cleanup is complete.')
+                    cleanup(bot1)
                 }, 200)
 
                 setTimeout(() => {
