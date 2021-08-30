@@ -149,7 +149,7 @@ export class AutoCrystal {
         } else {
             return false
         }
-    }
+    } 
 
     /**
      * Gets the nearest player
