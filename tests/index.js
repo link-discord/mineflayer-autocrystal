@@ -6,6 +6,7 @@ function cleanup(bot) {
     bot.chat('/gamemode survival')
     bot.chat('/fill -10 4 -10 10 30 10 minecraft:air')
     bot.chat('/kill @e[type=!minecraft:player]')
+    console.log('Cleanup is complete.')
 }
 
 async function main() {
@@ -47,7 +48,6 @@ async function main() {
 
         setTimeout(() => {
             cleanup(bot1)
-            console.log('Cleanup is complete.')
         }, 200)
 
         setTimeout(() => {
@@ -60,8 +60,6 @@ async function main() {
         bot1.autoCrystal.options.logErrors = true
         bot1.autoCrystal.options.placeMode = 'suicide'
         bot1.autoCrystal.options.breakMode = 'suicide'
-
-        cleanup(bot1)
 
         console.log('[Bot (1)] Teleported to 0 4 0')
 
