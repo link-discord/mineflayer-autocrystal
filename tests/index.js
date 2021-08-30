@@ -37,12 +37,16 @@ async function main() {
 
         playerDied = true
 
-        bot1.chat('/fill -10 4 -10 10 30 10 minecraft:air')
+        bot1.chat('Test has been succesful.')
+
+        setTimeout(() => {
+            bot1.chat('/fill -10 4 -10 10 30 10 minecraft:air')
+        }, 200)
 
         setTimeout(() => {
             console.log('Test passed.')
             process.exit(0)
-        }, 100)
+        }, 400)
     })
 
     bot1.once('spawn', async () => {
