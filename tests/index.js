@@ -101,7 +101,7 @@ async function main() {
                     process.exit(1)
                 }, 800)
             }
-        }, 32 * 1000)
+        }, 32 * 1000) 
     })
 
     bot2.once('spawn', async () => {
