@@ -58,7 +58,7 @@ async function main() {
 
         bot1.chat('/tp 0 4 0')
 
-        console.log('bot1 has teleported to 0 4 0')
+        console.log('[Bot (1)] Teleported to 0 4 0')
 
         setTimeout(() => {
             bot1.chat('/give @s minecraft:end_crystal 100')
@@ -66,19 +66,19 @@ async function main() {
             bot1.chat('/fill 2 10 0 2 10 0 minecraft:bedrock')
             bot1.chat('/fill 2 10 0 3 10 0 minecraft:bedrock')
             bot1.chat('/fill 3 10 0 4 10 0 minecraft:bedrock')
-            console.log('Platforms have been created and end crystals were given to bot1')
+            console.log('[Bot (1)] Platforms have been created.')
         }, 4 * 1000)
 
         setTimeout(() => {
             bot1.chat('/tp @s 0 11 0')
-            console.log('bot1 has been teleported to the platform')
+            console.log('[Bot (1)] Teleported to the platform.')
         }, 6 * 1000)
 
         setTimeout(() => {
             bot1.chat('/gamemode creative')
             bot1.autoCrystal.enable()
             caEnabled = true
-            console.log('bot1 has enabled the auto crystal.')
+            console.log('[Bot (1)] Enabled the auto crystal.')
         }, 10 * 1000)
 
         setTimeout(() => {
@@ -106,12 +106,12 @@ async function main() {
     bot2.once('spawn', async () => {
         bot2.chat('/gamemode creative')
 
-        console.log('bot2 has entered creative mode.')
+        console.log('[Bot (2)] Entered creative mode.')
 
         setTimeout(() => {
             bot2.chat('/gamemode survival')
             bot2.chat('/tp @s 4 11 0')
-            console.log('bot2 has been teleported to 4 11 0 and is now in survival mode.')
+            console.log('[Bot (2)] Teleported to 4 11 0 and now in survival mode.')
         }, 8 * 1000)
     })
 }
