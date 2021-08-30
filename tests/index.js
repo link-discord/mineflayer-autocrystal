@@ -37,14 +37,16 @@ async function main() {
 
         playerDied = true
 
+        bot1.chat('/gamemode survival')
         bot1.chat('Test has been succesful.')
 
         setTimeout(() => {
             bot1.chat('/fill -10 4 -10 10 30 10 minecraft:air')
+            console.log('Cleanup is complete.')
         }, 200)
 
         setTimeout(() => {
-            console.log('Test passed.')
+            console.log('Test has passed.')
             process.exit(0)
         }, 400)
     })
@@ -55,7 +57,8 @@ async function main() {
         bot1.autoCrystal.options.breakMode = 'suicide'
 
         bot1.chat('/tp 0 4 0')
-        bot1.chat('/kill @e[type=minecraft:item]')
+
+        console.log('bot1 has teleported to 0 4 0')
 
         setTimeout(() => {
             bot1.chat('/give @s minecraft:end_crystal 100')
@@ -63,16 +66,19 @@ async function main() {
             bot1.chat('/fill 2 10 0 2 10 0 minecraft:bedrock')
             bot1.chat('/fill 2 10 0 3 10 0 minecraft:bedrock')
             bot1.chat('/fill 3 10 0 4 10 0 minecraft:bedrock')
+            console.log('Platforms have been created and end crystals were given to bot1')
         }, 4 * 1000)
 
         setTimeout(() => {
             bot1.chat('/tp @s 0 11 0')
+            console.log('bot1 has been teleported to the platform')
         }, 6 * 1000)
 
         setTimeout(() => {
             bot1.chat('/gamemode creative')
             bot1.autoCrystal.enable()
             caEnabled = true
+            console.log('bot1 has enabled the auto crystal.')
         }, 10 * 1000)
 
         setTimeout(() => {
@@ -86,10 +92,11 @@ async function main() {
 
                 setTimeout(() => {
                     bot1.chat('/fill -10 4 -10 10 30 10 minecraft:air')
+                    console.log('Cleanup is complete.')
                 }, 200)
 
                 setTimeout(() => {
-                    console.log('Test failed.')
+                    console.log('Test failed due to timeout.')
                     process.exit(1)
                 }, 400)
             }
@@ -99,9 +106,12 @@ async function main() {
     bot2.once('spawn', async () => {
         bot2.chat('/gamemode creative')
 
+        console.log('bot2 has entered creative mode.')
+
         setTimeout(() => {
             bot2.chat('/gamemode survival')
             bot2.chat('/tp @s 4 11 0')
+            console.log('bot2 has been teleported to 4 11 0 and is now in survival mode.')
         }, 8 * 1000)
     })
 }
