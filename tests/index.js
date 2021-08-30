@@ -82,8 +82,16 @@ async function main() {
             caEnabled = false
 
             if (!playerDied) {
-                console.log('Test failed.')
-                process.exit(1)
+                bot1.chat('Test has failed.')
+
+                setTimeout(() => {
+                    bot1.chat('/fill -10 4 -10 10 30 10 minecraft:air')
+                }, 200)
+
+                setTimeout(() => {
+                    console.log('Test failed.')
+                    process.exit(1)
+                }, 400)
             }
         }, 21 * 1000)
     })
