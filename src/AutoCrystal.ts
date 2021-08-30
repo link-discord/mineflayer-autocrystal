@@ -107,8 +107,12 @@ export class AutoCrystal {
                     return false
                 }
 
-                await this.bot.lookAt(block, true)
-                await this.bot.placeEntity(this.bot.blockAt(block), new Vec3(0, 1, 0))
+                const crystal = this.bot.nearestEntity((entity) => entity.name === 'end_crystal')
+
+                if (!crystal || crystal.position !== block.offset(0, 1, 0)) {
+                    await this.bot.lookAt(block, true)
+                    await this.bot.placeEntity(this.bot.blockAt(block), new Vec3(0, 1, 0))
+                }
             } catch (error) {
                 if (this.options.logErrors) this.bot.emit('error', error)
             }
@@ -266,7 +270,7 @@ export class AutoCrystal {
     async disable(): Promise<boolean> {
         this.enabled = false
         return true
-    } 
+    }
 
     /**
      * Enables the AutoCrystal
