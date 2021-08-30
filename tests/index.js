@@ -56,6 +56,7 @@ async function main() {
         bot1.autoCrystal.options.placeMode = 'suicide'
         bot1.autoCrystal.options.breakMode = 'suicide'
 
+        bot1.chat('/fill -10 5 -10 12 30 10 minecraft:air')
         bot1.chat('/tp 0 4 0')
 
         console.log('[Bot (1)] Teleported to 0 4 0')
