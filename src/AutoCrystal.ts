@@ -112,10 +112,14 @@ export class AutoCrystal {
                 if (!crystal || crystal.position !== block.offset(0, 1, 0)) {
                     await this.bot.lookAt(block, true)
                     await this.bot.placeEntity(this.bot.blockAt(block), new Vec3(0, 1, 0))
+                } else {
+                    if (crystal.position.xzDistanceTo(this.bot.entity.position) < 4) {
+                        await this.breakCrystal()
+                    }
                 }
             } catch (error) {
                 if (this.options.logErrors) this.bot.emit('error', error)
-            } 
+            }
 
             return true
         }
