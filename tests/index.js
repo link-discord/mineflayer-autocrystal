@@ -63,17 +63,17 @@ async function main() {
             bot1.chat('/fill 2 10 0 2 10 0 minecraft:bedrock')
             bot1.chat('/fill 2 10 0 3 10 0 minecraft:bedrock')
             bot1.chat('/fill 3 10 0 4 10 0 minecraft:bedrock')
-        }, 5 * 1000)
+        }, 4 * 1000)
 
         setTimeout(() => {
             bot1.chat('/tp @s 0 11 0')
-        }, 7 * 1000)
+        }, 6 * 1000)
 
         setTimeout(() => {
             bot1.chat('/gamemode creative')
             bot1.autoCrystal.enable()
             caEnabled = true
-        }, 11 * 1000)
+        }, 10 * 1000)
 
         setTimeout(() => {
             bot1.chat('/gamemode survival')
@@ -93,7 +93,7 @@ async function main() {
                     process.exit(1)
                 }, 400)
             }
-        }, 21 * 1000)
+        }, 40 * 1000)
     })
 
     bot2.once('spawn', async () => {
@@ -102,7 +102,7 @@ async function main() {
         setTimeout(() => {
             bot2.chat('/gamemode survival')
             bot2.chat('/tp @s 4 11 0')
-        }, 9 * 1000)
+        }, 8 * 1000)
     })
 }
 
