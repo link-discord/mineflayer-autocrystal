@@ -11,7 +11,6 @@ function main() {
 
 	bot.once('spawn', () => {
 		bot.autoCrystal.options.logErrors = true
-
 		console.clear()
 		console.log('Spawned.')
 		bot.chat('/gamemode creative')
