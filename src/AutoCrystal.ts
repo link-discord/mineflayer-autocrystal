@@ -1,6 +1,9 @@
 import { Bot } from 'mineflayer'
 import { Entity } from 'prismarine-entity'
 import { Vec3 } from 'vec3'
+import { promisify } from 'util'
+
+const sleep = promisify(setTimeout)
 
 interface MineflayerBot extends Bot {
     getExplosionDamages(entity: Entity, position: Vec3, raidus: number, rawDamages?: boolean): number
@@ -142,7 +145,8 @@ export class AutoCrystal {
                 return false
             }
 
-            await this.bot.waitForTicks(1)
+            await sleep(50)
+
             this.bot.attack(crystal)
             return true
         } else {
@@ -229,7 +233,7 @@ export class AutoCrystal {
                 }
 
                 try {
-                    await this.bot.waitForTicks(this.options.delay)
+                    await sleep(this.options.delay * 50)
                     await this.placeCrystal(player.position)
                     await this.breakCrystal()
                 } catch (error) {
