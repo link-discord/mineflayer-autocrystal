@@ -234,7 +234,7 @@ export class AutoCrystal {
                 } catch (error) {
                     this.run = false
                     if (this.options.logErrors) this.bot.emit('error', error)
-                }
+                } 
             } else {
                 this.run = false
             }
