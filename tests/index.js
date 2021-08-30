@@ -42,13 +42,14 @@ async function main() {
 
         setTimeout(() => {
             bot1.chat('/fill -10 4 -10 10 30 10 minecraft:air')
+            bot1.chat('/kill @e[type=!minecraft:player]')
             console.log('Cleanup is complete.')
         }, 200)
 
         setTimeout(() => {
             console.log('Test has passed.')
             process.exit(0)
-        }, 400)
+        }, 800)
     })
 
     bot1.once('spawn', async () => {
@@ -56,6 +57,7 @@ async function main() {
         bot1.autoCrystal.options.placeMode = 'suicide'
         bot1.autoCrystal.options.breakMode = 'suicide'
 
+        bot1.chat('/kill @e[type=!minecraft:player]')
         bot1.chat('/fill -10 5 -10 12 30 10 minecraft:air')
         bot1.chat('/tp 0 4 0')
 
@@ -93,13 +95,14 @@ async function main() {
 
                 setTimeout(() => {
                     bot1.chat('/fill -10 5 -10 12 30 10 minecraft:air')
+                    bot1.chat('/kill @e[type=!minecraft:player]')
                     console.log('Cleanup is complete.')
                 }, 200)
 
                 setTimeout(() => {
                     console.log('Test failed due to timeout.')
                     process.exit(1)
-                }, 400)
+                }, 800)
             }
         }, 30 * 1000)
     })
