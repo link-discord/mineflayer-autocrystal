@@ -115,7 +115,7 @@ export class AutoCrystal {
                 }
             } catch (error) {
                 if (this.options.logErrors) this.bot.emit('error', error)
-            }
+            } 
 
             return true
         }
