@@ -219,7 +219,7 @@ export class AutoCrystal {
         this.started = true
 
         // loop to start the auto crystal
-        while (this.run && this.enabled) {
+        while (this.run) {
             const player = await this.getNearestPlayer()
             const crystal = this.bot.inventory.items().find((item) => item.name === 'end_crystal')
 

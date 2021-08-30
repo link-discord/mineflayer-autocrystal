@@ -24,7 +24,7 @@ async function main() {
         host: data.ip,
         port: data.port,
         username: 'bot2'
-    }) 
+    })
 
     bot1.on('error', (error) => {
         console.error(error)
@@ -82,7 +82,7 @@ async function main() {
             bot1.autoCrystal.enable()
             caEnabled = true
             console.log('[Bot (1)] Enabled the auto crystal.')
-        }, 10 * 1000)
+        }, 12 * 1000)
 
         setTimeout(() => {
             bot1.autoCrystal.disable()
@@ -101,7 +101,7 @@ async function main() {
                     process.exit(1)
                 }, 800)
             }
-        }, 30 * 1000)
+        }, 32 * 1000)
     })
 
     bot2.once('spawn', async () => {
