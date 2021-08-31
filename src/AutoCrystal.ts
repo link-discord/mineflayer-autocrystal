@@ -158,7 +158,7 @@ export class AutoCrystal {
     private async placeCrystal(position: Vec3): Promise<boolean> {
         const crystal = this.bot.nearestEntity((entity) => entity.name === 'end_crystal')
 
-        if (!crystal || crystal.position !== position.offset(0, 1, 0)) {
+        if (!crystal || (crystal && Math.floor(crystal.position.distanceTo(position)) > 0)) {
             await this.bot.lookAt(position, true)
             await this.bot.placeEntity(this.bot.blockAt(position), new Vec3(0, 1, 0))
 
