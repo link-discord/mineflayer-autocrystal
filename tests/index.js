@@ -58,7 +58,7 @@ async function main() {
 
     bot1.once('spawn', async () => {
         bot1.autoCrystal.options.logErrors = true
-        bot1.autoCrystal.options.placeMode = 'suicide'
+        bot1.autoCrystal.options.placeMode = 'damage'
         bot1.autoCrystal.options.breakMode = 'suicide'
 
         console.log('[Bot (1)] Teleported to 0 4 0')
@@ -101,7 +101,7 @@ async function main() {
                     process.exit(1)
                 }, 800)
             }
-        }, 32 * 1000) 
+        }, 32 * 1000)
     })
 
     bot2.once('spawn', async () => {
