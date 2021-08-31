@@ -171,8 +171,6 @@ export class AutoCrystal {
         }
 
         if (!crystal || (crystal && Math.floor(crystal.position.distanceTo(position)) > 0)) {
-            await this.bot.lookAt(position, true)
-
             // @ts-expect-error
             this.bot.emit('debug', `[AutoCrystal] now trying to place the crystal`)
 
