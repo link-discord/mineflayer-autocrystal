@@ -64,6 +64,18 @@ export class AutoCrystal {
     }
 
     /**
+     * Emits the debug log event with the specified message.
+     * @param {string} message The message to be emitted.
+     * @returns {void}
+     * @memberof AutoCrystal
+     * @private
+     */
+    private debug(message: string) {
+        // @ts-expect-error
+        this.bot.emit('debug', `[AutoCrystal] ${message}`)
+    }
+
+    /**
      * Finds the best position to place the crystal on to.
      * @async
      * @param {Vec3} position Vec3 position.
@@ -158,32 +170,21 @@ export class AutoCrystal {
     private async placeCrystal(position: Vec3): Promise<boolean> {
         let crystalPlaced = false
 
-        // @ts-expect-error
-        this.bot.emit('debug', `[AutoCrystal] placeCrystal function executed`)
-
         const crystal = this.bot.nearestEntity((entity) => entity.name === 'end_crystal')
 
-        // @ts-expect-error
-        if (crystal) this.bot.emit('debug', `[AutoCrystal] crystal entity already exists`)
-        else {
-            // @ts-expect-error
-            this.bot.emit('debug', `[AutoCrystal] crystal entity doesnt already exist`)
-        }
-
         if (!crystal || (crystal && Math.floor(crystal.position.distanceTo(position)) > 0)) {
-            // @ts-expect-error
-            this.bot.emit('debug', `[AutoCrystal] now trying to place the crystal`)
+            this.debug('Now trying to place the crystal.')
 
-            this.bot.placeEntity(this.bot.blockAt(position), new Vec3(0, 1, 0))
+            this.bot.lookAt(position, true, () => {
+                this.bot.placeEntity(this.bot.blockAt(position), new Vec3(0, 1, 0))
+            })
+
             crystalPlaced = true
-            // @ts-expect-error
-            this.bot.emit('debug', `[AutoCrystal] crystal placed: ${crystalPlaced}`)
         } else if (crystal && crystal.position.distanceTo(this.bot.entity.position) <= 4) {
             await this.breakCrystal(crystal)
         }
 
-        // @ts-expect-error
-        this.bot.emit('debug', `[AutoCrystal] crystal placed: ${crystalPlaced}`)
+        this.debug(`Crystal placed: ${crystalPlaced}.`)
 
         return crystalPlaced
     }
@@ -307,8 +308,7 @@ export class AutoCrystal {
                     const position = await this.findPosition(player)
 
                     if (position) {
-                        // @ts-ignore
-                        this.bot.emit('debug', `[AutoCrystal] Position where crystal will be placed: ${position.toString()}`)
+                        this.debug(`Position where crystal will be placed: ${position.toString()}.`)
                         const placed = await this.placeCrystal(position)
                         if (placed) await this.breakCrystal()
                     }
