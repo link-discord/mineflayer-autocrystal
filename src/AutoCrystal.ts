@@ -159,7 +159,7 @@ export class AutoCrystal {
         if (!crystal || crystal.position !== position.offset(0, 1, 0)) {
             await this.bot.lookAt(position, true)
             await this.bot.placeEntity(this.bot.blockAt(position), new Vec3(0, 1, 0))
-            
+
             return true
         } else if (crystal && crystal.position.distanceTo(this.bot.entity.position) <= 4) {
             await this.breakCrystal(crystal)
@@ -314,22 +314,20 @@ export class AutoCrystal {
 
     /**
      * Disables the AutoCrystal
-     * @async
-     * @returns {Promise<boolean>}
+     * @returns {boolean}
      * @memberof AutoCrystal
      */
-    async disable(): Promise<boolean> {
+    disable(): boolean {
         this.enabled = false
         return true
     }
 
     /**
      * Enables the AutoCrystal
-     * @async
-     * @returns {Promise<boolean>}
+     * @returns {boolean}
      * @memberof AutoCrystal
      */
-    async enable(): Promise<boolean> {
+    enable(): boolean {
         if (this.started) return false
         this.enabled = true
         return true
