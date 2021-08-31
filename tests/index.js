@@ -94,7 +94,7 @@ async function main() {
             bot1.autoCrystal.enable()
             caEnabled = true
             console.log('[Bot (1)] Enabled the auto crystal.')
-        }, 15 * 1000)
+        }, 10 * 1000)
 
         setTimeout(() => {
             bot1.autoCrystal.disable()
@@ -113,7 +113,7 @@ async function main() {
                     process.exit(1)
                 }, 800)
             }
-        }, 35 * 1000)
+        }, 30 * 1000)
     })
 
     bot2.once('spawn', async () => {

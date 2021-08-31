@@ -25,7 +25,13 @@ jobs:
       run: npm ci
     - name: Compile typescript code
       run: npm run build --if-present
-    - name: Run tests
+    - name: Run test with bedrock blocks
       run: npm test
       env:
+          MINECRAFT_BLOCK: 'minecraft:bedrock'
+          API: ${{ secrets.API }}
+    - name: Run test with obsidian blocks
+      run: npm test
+      env:
+          MINECRAFT_BLOCK: 'minecraft:obsidian'
           API: ${{ secrets.API }}
