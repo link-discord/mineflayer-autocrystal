@@ -113,7 +113,7 @@ export class AutoCrystal {
 
                 let bestPositions = arr.sort(function (a, b) {
                     return b.enemyDamage - b.selfDamage - (a.enemyDamage - a.selfDamage)
-                })
+                }) 
 
                 bestPositions = bestPositions.filter((pos) => this.bot.health > pos.selfDamage)
 
