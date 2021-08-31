@@ -26,6 +26,12 @@ async function main() {
         username: 'bot2'
     })
 
+    bot1.on('entitySpawn', (entity) => {
+        if (entity.name === 'end_crystal') {
+            console.log('[Bot (1)] Crystal has been placed.')
+        }
+    })
+
     bot1.on('debug', (message) => {
         console.debug(message)
     })
