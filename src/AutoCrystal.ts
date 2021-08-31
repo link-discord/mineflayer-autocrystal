@@ -104,10 +104,10 @@ export class AutoCrystal {
                 })
 
                 // check if there is a position that would kill the enemy
-                const { position: killPosition } = arr.find((pos) => pos.enemyDamage >= entity.health && pos.selfDamage < this.bot.entity.health)
+                const killPosition = arr.find((pos) => pos.enemyDamage >= entity.health && pos.selfDamage < this.bot.entity.health)
 
                 // use that position so the whole array doesn't have to be sorted
-                if (killPosition) return killPosition
+                if (killPosition) return killPosition.position
 
                 let bestPositions = arr.sort(function (a, b) {
                     return b.enemyDamage - b.selfDamage - (a.enemyDamage - a.selfDamage)
@@ -116,8 +116,8 @@ export class AutoCrystal {
                 bestPositions = bestPositions.filter((pos) => this.bot.health > pos.selfDamage)
 
                 if (bestPositions.length >= 1) {
-                    const { position: bestPosition } = bestPositions[0]
-                    return bestPosition
+                    const bestPosition = bestPositions[0]
+                    return bestPosition.position
                 }
             } catch (error) {
                 if (this.options.logErrors) this.bot.emit('error', error)
@@ -298,7 +298,7 @@ export class AutoCrystal {
 
         this.started = false
         this.run = true
-    }  
+    }
 
     /**
      * Stops the auto crystal
