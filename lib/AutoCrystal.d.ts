@@ -15,7 +15,7 @@ interface Options {
      * The delay in ticks between each crystal placement.
      */
     delay?: number;
-    placeMode: 'suicide' | 'safe';
+    placeMode: 'suicide' | 'safe' | 'damage';
     breakMode: 'suicide' | 'safe';
 }
 export declare class AutoCrystal {
@@ -31,7 +31,9 @@ export declare class AutoCrystal {
      * @property {boolean} [logErrors=false] If errors should be logged.
      * @property {number} [damageThreshold=5] - If the damage exceeds the threshold, it will not place / break the crystal.
      * @property {number} [delay=1] - The delay in ticks between each crystal placement.
-     * @property {string} placeMode - The mode used to place the crystal.
+     * @property {string} placeMode - The mode used to place the crystal. Can be "suicide", "safe" or "damage".
+     * The "damage" place mode will place the crystal on the block where the damage for the bot is the lowest
+     * and the damage for the opponent is the highest.
      * @property {string} breakMode - The mode used to break the crystal.
      */
     /**
@@ -40,10 +42,19 @@ export declare class AutoCrystal {
      */
     constructor(bot: MineflayerBot, options?: Options);
     /**
-     * Places a crystal close to the position if possible
+     * Finds the best position to place the crystal on to.
      * @async
      * @param {Vec3} position Vec3 position.
-     * @returns {boolean} A boolean if it worked or not.
+     * @returns {Vec3} The position to place the crystal on.
+     * @memberof AutoCrystal
+     * @private
+     */
+    private findPosition;
+    /**
+     * Places the crystal on the specified position.
+     * @async
+     * @param {Vec3} position Vec3 position.
+     * @returns {boolean} A boolean indicating if the crystal was placed.
      * @memberof AutoCrystal
      * @private
      */
@@ -51,7 +62,8 @@ export declare class AutoCrystal {
     /**
      * Breaks the nearest crystal
      * @async
-     * @returns {boolean} A boolean if it worked or not
+     * @param {Entity} entity The crystal to break.
+     * @returns {boolean} A boolean indicating if the crystal was broken.
      * @memberof AutoCrystal
      * @private
      */
