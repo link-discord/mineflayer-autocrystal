@@ -298,7 +298,7 @@ export class AutoCrystal {
 
         this.started = false
         this.run = true
-    }
+    }  
 
     /**
      * Stops the auto crystal
