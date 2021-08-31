@@ -183,6 +183,9 @@ export class AutoCrystal {
 
         if (!crystal) crystal = this.bot.nearestEntity((entity) => entity.name === 'end_crystal')
 
+        // @ts-ignore
+        this.bot.emit('debug', `[AutoCrystal] Crystal entity: ${crystal?.id}`)
+
         if (crystal) {
             const damage = this.bot.getExplosionDamages(this.bot.entity, crystal.position, 6, true)
 
