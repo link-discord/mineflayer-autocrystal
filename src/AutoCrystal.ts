@@ -52,6 +52,7 @@ export class AutoCrystal {
         public bot: MineflayerBot,
         public options: Options = {
             ignoreInventoryCheck: true,
+            logDebug: false,
             logErrors: false,
             placeMode: 'safe',
             breakMode: 'safe',
