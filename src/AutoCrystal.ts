@@ -159,17 +159,23 @@ export class AutoCrystal {
         let crystalPlaced = false
 
         // @ts-expect-error
-        this.bot.emit('debug', `[AutoCrystal] now trying to place the crystal`)
+        this.bot.emit('debug', `[AutoCrystal] placeCrystal function executed`)
 
         const crystal = this.bot.nearestEntity((entity) => entity.name === 'end_crystal')
 
         // @ts-expect-error
         if (crystal) this.bot.emit('debug', `[AutoCrystal] crystal entity already exists`)
+        else {
             // @ts-expect-error
-        else this.bot.emit('debug', `[AutoCrystal] crystal entity doesnt already exist`)
+            this.bot.emit('debug', `[AutoCrystal] crystal entity doesnt already exist`)
+        }
 
         if (!crystal || (crystal && Math.floor(crystal.position.distanceTo(position)) > 0)) {
             await this.bot.lookAt(position, true)
+
+            // @ts-expect-error
+            this.bot.emit('debug', `[AutoCrystal] now trying to place the crystal`)
+
             await this.bot.placeEntity(this.bot.blockAt(position), new Vec3(0, 1, 0))
             crystalPlaced = true
             // @ts-expect-error
