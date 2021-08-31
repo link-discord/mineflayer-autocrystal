@@ -104,7 +104,9 @@ export class AutoCrystal {
                 })
 
                 // check if there is a position that would kill the enemy
-                const killPosition = arr.find((pos) => pos.enemyDamage >= entity.health && pos.selfDamage < this.bot.entity.health)
+                const killPosition = arr.find((pos) => {
+                    return pos.enemyDamage >= entity.health && pos.selfDamage < this.bot.entity.health
+                })
 
                 // use that position so the whole array doesn't have to be sorted
                 if (killPosition) return killPosition.position
