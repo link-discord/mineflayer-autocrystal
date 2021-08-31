@@ -156,18 +156,24 @@ export class AutoCrystal {
      * @private
      */
     private async placeCrystal(position: Vec3): Promise<boolean> {
+        let crystalPlaced = false
+
         const crystal = this.bot.nearestEntity((entity) => entity.name === 'end_crystal')
 
         if (!crystal || (crystal && Math.floor(crystal.position.distanceTo(position)) > 0)) {
             await this.bot.lookAt(position, true)
             await this.bot.placeEntity(this.bot.blockAt(position), new Vec3(0, 1, 0))
-
-            return true
+            crystalPlaced = true
+            // @ts-ignore
+            this.bot.emit('debug', `[AutoCrystal] crystal placed: ${crystalPlaced}`)
         } else if (crystal && crystal.position.distanceTo(this.bot.entity.position) <= 4) {
             await this.breakCrystal(crystal)
         }
 
-        return false
+        // @ts-ignore
+        this.bot.emit('debug', `[AutoCrystal] crystal placed: ${crystalPlaced}`)
+
+        return crystalPlaced
     }
 
     /**
@@ -184,7 +190,7 @@ export class AutoCrystal {
         if (!crystal) crystal = this.bot.nearestEntity((entity) => entity.name === 'end_crystal')
 
         // @ts-ignore
-        this.bot.emit('debug', `[AutoCrystal] Crystal entity: ${crystal?.id}`) 
+        this.bot.emit('debug', `[AutoCrystal] Crystal entity: ${crystal?.id}`)
 
         if (crystal) {
             const damage = this.bot.getExplosionDamages(this.bot.entity, crystal.position, 6, true)
