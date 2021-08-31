@@ -174,7 +174,7 @@ export class AutoCrystal {
             // @ts-expect-error
             this.bot.emit('debug', `[AutoCrystal] now trying to place the crystal`)
 
-            await this.bot.placeEntity(this.bot.blockAt(position), new Vec3(0, 1, 0))
+            this.bot.placeEntity(this.bot.blockAt(position), new Vec3(0, 1, 0))
             crystalPlaced = true
             // @ts-expect-error
             this.bot.emit('debug', `[AutoCrystal] crystal placed: ${crystalPlaced}`)
