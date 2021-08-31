@@ -158,19 +158,22 @@ export class AutoCrystal {
     private async placeCrystal(position: Vec3): Promise<boolean> {
         let crystalPlaced = false
 
+        // @ts-expect-error
+        this.bot.emit('debug', `[AutoCrystal] now trying to place the crystal`)
+
         const crystal = this.bot.nearestEntity((entity) => entity.name === 'end_crystal')
 
         if (!crystal || (crystal && Math.floor(crystal.position.distanceTo(position)) > 0)) {
             await this.bot.lookAt(position, true)
             await this.bot.placeEntity(this.bot.blockAt(position), new Vec3(0, 1, 0))
             crystalPlaced = true
-            // @ts-ignore
+            // @ts-expect-error
             this.bot.emit('debug', `[AutoCrystal] crystal placed: ${crystalPlaced}`)
         } else if (crystal && crystal.position.distanceTo(this.bot.entity.position) <= 4) {
             await this.breakCrystal(crystal)
         }
 
-        // @ts-ignore
+        // @ts-expect-error
         this.bot.emit('debug', `[AutoCrystal] crystal placed: ${crystalPlaced}`)
 
         return crystalPlaced
