@@ -12,6 +12,8 @@ function cleanup(bot) {
 async function main() {
     const { data } = await axios.get(`${process.env.API}/minecraft`)
 
+    const block = process.env.MINECRAFT_BLOCK
+
     const bot1 = mineflayer.createBot({
         host: data.ip,
         port: data.port,
@@ -75,10 +77,10 @@ async function main() {
 
         setTimeout(() => {
             bot1.chat('/give @s minecraft:end_crystal 100')
-            bot1.chat('/fill 0 11 0 0 11 0 minecraft:bedrock')
-            bot1.chat('/fill 2 11 0 2 11 0 minecraft:bedrock')
-            bot1.chat('/fill 2 11 0 3 11 0 minecraft:bedrock')
-            bot1.chat('/fill 3 11 0 4 11 0 minecraft:bedrock')
+            bot1.chat(`/fill 0 11 0 0 11 0 ${block}`)
+            bot1.chat(`/fill 2 11 0 2 11 0 ${block}`)
+            bot1.chat(`/fill 2 11 0 3 11 0 ${block}`)
+            bot1.chat(`/fill 3 11 0 4 11 0 ${block}`)
             console.log('[Bot (1)] Platforms have been created.')
         }, 4 * 1000)
 
