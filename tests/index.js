@@ -26,6 +26,10 @@ async function main() {
         username: 'bot2'
     })
 
+    bot1.on('debug', (message) => {
+        console.debug(message)
+    })
+
     bot1.on('error', (error) => {
         console.error(error)
         process.exit(1)

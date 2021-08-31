@@ -113,7 +113,7 @@ export class AutoCrystal {
 
                 let bestPositions = arr.sort(function (a, b) {
                     return b.enemyDamage - b.selfDamage - (a.enemyDamage - a.selfDamage)
-                }) 
+                })
 
                 bestPositions = bestPositions.filter((pos) => this.bot.health > pos.selfDamage)
 
@@ -286,6 +286,8 @@ export class AutoCrystal {
                     const position = await this.findPosition(player)
 
                     if (position) {
+                        // @ts-ignore
+                        this.bot.emit('debug', `[AutoCrystal] Position where crystal will be placed: ${position.toString()}`)
                         const placed = await this.placeCrystal(position)
                         if (placed) await this.breakCrystal()
                     }
