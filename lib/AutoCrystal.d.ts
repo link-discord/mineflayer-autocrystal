@@ -1,33 +1,33 @@
-import { Bot } from 'mineflayer';
-import { Entity } from 'prismarine-entity';
-import { Vec3 } from 'vec3';
+import { Bot } from 'mineflayer'
+import { Entity } from 'prismarine-entity'
+import { Vec3 } from 'vec3'
 interface MineflayerBot extends Bot {
-    getExplosionDamages(entity: Entity, position: Vec3, raidus: number, rawDamages?: boolean): number;
+    getExplosionDamages(entity: Entity, position: Vec3, raidus: number, rawDamages?: boolean): number
 }
 interface Options {
-    ignoreInventoryCheck?: boolean;
-    logErrors?: boolean;
+    ignoreInventoryCheck?: boolean
+    logErrors?: boolean
     /**
      * Emits the `debug` event with information about what AutoCrystal is up to.
      */
-    logDebug?: boolean;
+    logDebug?: boolean
     /**
      * If the damage exceeds the threshold, it will not place / break the crystal.
      */
-    damageThreshold?: number;
+    damageThreshold?: number
     /**
      * The delay in ticks between each crystal placement.
      */
-    delay?: number;
-    placeMode: 'suicide' | 'safe' | 'damage';
-    breakMode: 'suicide' | 'safe';
+    delay?: number
+    placeMode: 'suicide' | 'safe' | 'damage'
+    breakMode: 'suicide' | 'safe'
 }
 export declare class AutoCrystal {
-    bot: MineflayerBot;
-    options: Options;
-    private run;
-    private started;
-    private enabled;
+    bot: MineflayerBot
+    options: Options
+    private run
+    private started
+    private enabled
     /**
      * Options for the `AutoCrystal` class.
      * @typedef {Object} Options
@@ -45,7 +45,7 @@ export declare class AutoCrystal {
      * @param {Options} options
      * @param {Bot} bot
      */
-    constructor(bot: MineflayerBot, options?: Options);
+    constructor(bot: MineflayerBot, options?: Options)
     /**
      * Options for the debug method.
      * @typedef {Object} DebugOptions
@@ -61,7 +61,7 @@ export declare class AutoCrystal {
      * @memberof AutoCrystal
      * @private
      */
-    private debug;
+    private debug
     /**
      * Finds the best position to place the crystal on to.
      * @async
@@ -70,7 +70,7 @@ export declare class AutoCrystal {
      * @memberof AutoCrystal
      * @private
      */
-    private findPosition;
+    private findPosition
     /**
      * Places the crystal on the specified position.
      * @async
@@ -79,7 +79,7 @@ export declare class AutoCrystal {
      * @memberof AutoCrystal
      * @private
      */
-    private placeCrystal;
+    private placeCrystal
     /**
      * Breaks the nearest crystal
      * @async
@@ -88,7 +88,7 @@ export declare class AutoCrystal {
      * @memberof AutoCrystal
      * @private
      */
-    private breakCrystal;
+    private breakCrystal
     /**
      * Gets the nearest player
      * @async
@@ -97,14 +97,14 @@ export declare class AutoCrystal {
      * @memberof AutoCrystal
      * @private
      */
-    private getNearestPlayer;
+    private getNearestPlayer
     /**
      * Gets holes near the bot.
      * @async
      * @returns {Vec3[]} An array of Vec3 positions
      * @memberof AutoCrystal
      */
-    getHoles(): Promise<Vec3[]>;
+    getHoles(): Promise<Vec3[]>
     /**
      * Starts the auto crystal
      * @async
@@ -112,7 +112,7 @@ export declare class AutoCrystal {
      * @memberof AutoCrystal
      * @private
      */
-    private start;
+    private start
     /**
      * Stops the auto crystal
      * @async
@@ -120,18 +120,18 @@ export declare class AutoCrystal {
      * @memberof AutoCrystal
      * @private
      */
-    private stop;
+    private stop
     /**
      * Disables the AutoCrystal
      * @returns {boolean}
      * @memberof AutoCrystal
      */
-    disable(): boolean;
+    disable(): boolean
     /**
      * Enables the AutoCrystal
      * @returns {boolean}
      * @memberof AutoCrystal
      */
-    enable(): boolean;
+    enable(): boolean
 }
-export {};
+export {}
