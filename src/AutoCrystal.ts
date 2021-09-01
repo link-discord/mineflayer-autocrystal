@@ -172,7 +172,11 @@ export class AutoCrystal {
         )
 
         // filter the positions by damage if safe mode is enabled
-        if (this.options.placeMode === 'safe') {
+        if (
+            this.options.placeMode === 'safe' &&
+            this.bot.game.difficulty !== 'peaceful' &&
+            this.bot.game.gameMode !== 'creative'
+        ) {
             positions = positions.filter((pos) => {
                 const damage = this.getDamage(this.bot.entity, pos.offset(0, 1, 0))
                 return damage <= this.options.damageThreshold || damage < this.bot.health
@@ -273,7 +277,8 @@ export class AutoCrystal {
             if (
                 this.options.breakMode === 'safe' &&
                 this.bot.game.difficulty !== 'peaceful' &&
-                (damage > this.options.damageThreshold || damage >= this.bot.health)
+                this.bot.game.gameMode !== 'creative' &&
+                (damage >= this.options.damageThreshold || damage > this.bot.health)
             ) {
                 return false
             }

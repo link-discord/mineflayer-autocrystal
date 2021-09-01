@@ -12,8 +12,6 @@ function cleanup(bot) {
 async function main() {
     const { data } = await axios.get(`${process.env.API}/minecraft`)
 
-    const block = process.env.MINECRAFT_BLOCK
-
     const bot1 = mineflayer.createBot({
         host: data.ip,
         port: data.port,
@@ -32,10 +30,6 @@ async function main() {
         if (entity.name === 'end_crystal') {
             console.log('[Bot (1)] Crystal has been placed.')
         }
-    })
-
-    bot1.on('debug', (message) => {
-        console.debug(message)
     })
 
     bot1.on('error', (error) => {
@@ -71,17 +65,17 @@ async function main() {
     bot1.once('spawn', async () => {
         bot1.autoCrystal.options.logDebug = true
         bot1.autoCrystal.options.logErrors = true
-        bot1.autoCrystal.options.placeMode = 'damage'
-        bot1.autoCrystal.options.breakMode = 'suicide'
 
-        console.log('[Bot (1)] Teleported to 0 4 0')
+        console.log('[Bot (1)] Bot has spawned')
+
+        bot1.chat('/gamemode creative')
 
         setTimeout(() => {
             bot1.chat('/give @s minecraft:end_crystal 100')
-            bot1.chat(`/fill 0 11 0 0 11 0 ${block}`)
-            bot1.chat(`/fill 2 11 0 2 11 0 ${block}`)
-            bot1.chat(`/fill 2 11 0 3 11 0 ${block}`)
-            bot1.chat(`/fill 3 11 0 4 11 0 ${block}`)
+            bot1.chat(`/fill 0 11 0 0 11 0 minecraft:bedrock`)
+            bot1.chat(`/fill 2 11 0 2 11 0 minecraft:bedrock`)
+            bot1.chat(`/fill 2 11 0 3 11 0 minecraft:bedrock`)
+            bot1.chat(`/fill 3 11 0 4 11 0 minecraft:bedrock`)
             console.log('[Bot (1)] Platforms have been created.')
         }, 4 * 1000)
 
@@ -91,7 +85,6 @@ async function main() {
         }, 6 * 1000)
 
         setTimeout(() => {
-            bot1.chat('/gamemode creative')
             bot1.autoCrystal.enable()
             caEnabled = true
             console.log('[Bot (1)] Enabled the auto crystal.')
@@ -118,9 +111,9 @@ async function main() {
     })
 
     bot2.once('spawn', async () => {
-        bot2.chat('/gamemode creative')
+        console.log('[Bot (2)] Bot has spawned.')
 
-        console.log('[Bot (2)] Entered creative mode.')
+        bot2.chat('/gamemode creative')
 
         setTimeout(() => {
             bot2.chat('/gamemode survival')
