@@ -81,7 +81,7 @@ export class AutoCrystal {
      */
     private debug(message: string) {
         // @ts-expect-error
-        this.bot.emit('debug', `[AutoCrystal] ${message}`)
+        if (this.options.logDebug) this.bot.emit('debug', `[AutoCrystal] ${message}`)
     }
 
     /**
