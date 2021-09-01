@@ -8,7 +8,7 @@ lerna-debug.log*
 
 # Examples
 examples
-test
+tests
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
@@ -110,5 +110,3 @@ dist
 README.md
 .github
 .gitignore
-
-tests
