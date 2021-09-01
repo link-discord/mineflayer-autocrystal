@@ -6,7 +6,12 @@ import { promisify } from 'util'
 const sleep = promisify(setTimeout)
 
 interface MineflayerBot extends Bot {
-    getExplosionDamages(entity: Entity, position: Vec3, raidus: number, rawDamages?: boolean): number
+    getExplosionDamages(
+        entity: Entity,
+        position: Vec3,
+        raidus: number,
+        rawDamages?: boolean
+    ): number
 }
 
 interface DebugOptions {
@@ -15,21 +20,41 @@ interface DebugOptions {
 }
 
 interface Options {
+    /**
+     * See https://github.com/PrismarineJS/mineflayer/issues/2030.
+     */
     ignoreInventoryCheck?: boolean
+    /**
+     * If set to true it will automatically equip an end crystal. default is `true`
+     */
+    autoEquip?: boolean
+    /**
+     * Emits the `error` event when an error occurs internally. default is `false`
+     */
     logErrors?: boolean
     /**
-     * Emits the `debug` event with information about what AutoCrystal is up to.
+     * Logs information about what AutoCrystal is up to. default is `false`
      */
     logDebug?: boolean
     /**
-     * If the damage exceeds the threshold, it will not place / break the crystal.
+     * If the damage exceeds the threshold, it will not place / break the crystal. default is `5`
      */
     damageThreshold?: number
     /**
-     * The delay in ticks between each crystal placement.
+     * The delay in ticks between each crystal placement. default is `1`
      */
     delay?: number
-    placeMode: 'suicide' | 'safe' | 'damage'
+    /**
+     * What the bot should prefer when choosing where to place a crystal. default is `none`
+     */
+    priority?: 'none' | 'damage' | 'distance'
+    /**
+     * The mode to use for placing the crystal. can be `suicide` or `safe`
+     */
+    placeMode: 'suicide' | 'safe'
+    /**
+     * The mode used for breaking the crystal. default is `safe`
+     */
     breakMode: 'suicide' | 'safe'
 }
 
@@ -41,15 +66,15 @@ export class AutoCrystal {
     /**
      * Options for the `AutoCrystal` class.
      * @typedef {Object} Options
-     * @property {boolean} [ignoreInventoryCheck=true] If the inventory check should be ignored.
-     * @property {boolean} [logDebug=false] If the debug log should be emitted.
-     * @property {boolean} [logErrors=false] If errors should be logged.
+     * @property {boolean} [ignoreInventoryCheck=true] - See https://github.com/PrismarineJS/mineflayer/issues/2030.
+     * @property {boolean} [autoEquip=true] - If set to true it will automatically equip an end crystal.
+     * @property {boolean} [logDebug=false] - If the debug log should be emitted.
+     * @property {boolean} [logErrors=false] - If errors should be logged.
      * @property {number} [damageThreshold=5] - If the damage exceeds the threshold, it will not place / break the crystal.
+     * @property {string} [priority=distance] - What the bot should prefer when choosing where to place a crystal.
      * @property {number} [delay=1] - The delay in ticks between each crystal placement.
-     * @property {string} placeMode - The mode used to place the crystal. Can be "suicide", "safe" or "damage".
-     * The "damage" place mode will place the crystal on the block where the damage for the bot is the lowest
-     * and the damage for the opponent is the highest.
-     * @property {string} breakMode - The mode used to break the crystal.
+     * @property {string} placeMode - The mode to use for placing the crystal. can be `suicide` or `safe`
+     * @property {string} breakMode - The mode to use for breaking the crystal. can be `suicide` or `safe`
      */
 
     /**
@@ -59,9 +84,11 @@ export class AutoCrystal {
     constructor(
         public bot: MineflayerBot,
         public options: Options = {
+            autoEquip: true,
             ignoreInventoryCheck: true,
             logDebug: false,
             logErrors: false,
+            priority: 'distance',
             placeMode: 'safe',
             breakMode: 'safe',
             damageThreshold: 5,
@@ -78,17 +105,9 @@ export class AutoCrystal {
     }
 
     /**
-     * Options for the debug method.
-     * @typedef {Object} DebugOptions
-     * @property {boolean} [useTime=false] Will use the `console.time` method.
-     * @property {boolean} [useTimeEnd=false] Will use the `console.timeEnd` method.
-     * @private
-     */
-
-    /**
      * Emits the debug log event with the specified message.
      * @param {string} message The message to be emitted.
-     * @param {DebugOptions} options The options for the debug method.
+     * @param {Object} options The options for the debug method.
      * @returns {void}
      * @memberof AutoCrystal
      * @private
@@ -98,6 +117,18 @@ export class AutoCrystal {
         if (!options) console.log(`[AutoCrystal] ${message}`)
         else if (options.useTime) console.time(`[AutoCrystal] ${message}`)
         else if (options.useTimeEnd) console.timeEnd(`[AutoCrystal] ${message}`)
+    }
+
+    /**
+     * Shortcut for getting the damage for an entity.
+     * @param {Entity} entity The entity to get the damage for.
+     * @param {Vec3} position The position of the explosion.
+     * @returns {number} The estimated damage the entity would recieve.
+     * @memberof AutoCrystal
+     * @private
+     */
+    private getDamage(entity: Entity, position: Vec3): number {
+        return this.bot.getExplosionDamages(entity, position, 6, true)
     }
 
     /**
@@ -111,7 +142,11 @@ export class AutoCrystal {
     private async findPosition(entity: Entity): Promise<Vec3 | null> {
         if (!this.enabled) return null
 
-        const entity_position = new Vec3(Math.floor(entity.position.x), Math.floor(entity.position.y), Math.floor(entity.position.z))
+        const entity_position = new Vec3(
+            Math.floor(entity.position.x),
+            Math.floor(entity.position.y),
+            Math.floor(entity.position.z)
+        )
 
         let positions = this.bot.findBlocks({
             point: this.bot.entity.position,
@@ -120,67 +155,74 @@ export class AutoCrystal {
             matching: (block) => block.name === 'obsidian' || block.name === 'bedrock'
         })
 
+        // Filter out positions that are too close or too far away from the target
         positions = positions.filter(
             (block) =>
                 Math.round(block.distanceTo(entity_position)) >= 1 &&
-                Math.round(block.distanceTo(entity_position)) <= 10 &&
+                Math.round(block.distanceTo(entity_position)) <= 8 &&
                 Math.round(this.bot.entity.position.y) <= entity_position.y &&
                 this.bot.entity.position.xzDistanceTo(block) >= 1.3
         )
 
-        positions = positions.filter((block) => this.bot.blockAt(block.offset(0, 1, 0)).name === 'air')
+        // Filter out positions that cant be used
+        positions = positions.filter(
+            (block) =>
+                this.bot.blockAt(block.offset(0, 1, 0)).name === 'air' &&
+                this.bot.blockAt(block.offset(0, 2, 0)).name === 'air'
+        )
 
-        if (this.options.placeMode === 'damage' && positions && positions.length >= 1) {
-            try {
-                const arr = positions.map((pos) => {
-                    return {
-                        position: pos,
-                        selfDamage: this.bot.getExplosionDamages(this.bot.entity, pos, 6, true),
-                        enemyDamage: this.bot.getExplosionDamages(entity, pos, 6, true)
-                    }
-                })
+        // filter the positions by damage if safe mode is enabled
+        if (this.options.placeMode === 'safe') {
+            positions = positions.filter((pos) => {
+                const damage = this.getDamage(this.bot.entity, pos.offset(0, 1, 0))
+                return damage <= this.options.damageThreshold || damage < this.bot.health
+            })
+        }
 
-                // check if there is a position that would kill the enemy
-                const killPosition = arr.find((pos) => {
-                    return pos.enemyDamage >= entity.health && pos.selfDamage < this.bot.entity.health
-                })
+        // incase there are no positions left
+        if (!positions || positions.length === 0) return null
 
-                // use that position so the whole array doesn't have to be sorted
-                if (killPosition) return killPosition.position
+        if (this.options.priority === 'distance') {
+            // sort positions by closest distance
+            positions = positions.sort((a, b) => {
+                return b.distanceTo(entity_position) - a.distanceTo(entity_position)
+            })
 
-                let bestPositions = arr.sort(function (a, b) {
-                    return b.enemyDamage - b.selfDamage - (a.enemyDamage - a.selfDamage)
-                })
+            return positions[0]
+        }
 
-                bestPositions = bestPositions.filter((pos) => this.bot.health > pos.selfDamage)
-
-                if (bestPositions.length >= 1) {
-                    const bestPosition = bestPositions[0]
-                    return bestPosition.position
+        if (this.options.priority === 'damage') {
+            // calculate damage for each explosion
+            const arr = positions.map((pos) => {
+                return {
+                    position: pos,
+                    selfDamage: this.getDamage(this.bot.entity, pos.offset(0, 1, 0)),
+                    enemyDamage: this.getDamage(entity, pos.offset(0, 1, 0))
                 }
-            } catch (error) {
-                if (this.options.logErrors) this.bot.emit('error', error)
-            }
+            })
+
+            // check if there is an explosion that would kill the enemy
+            const killPosition = arr.find((pos) => {
+                return pos.enemyDamage >= entity.health
+            })
+
+            // use that position so the whole array doesn't have to be sorted
+            if (killPosition) return killPosition.position
+
+            // sort the array by lowest damage for the bot and highest damage for the enemy
+            let bestPositions = arr.sort(function (a, b) {
+                return b.enemyDamage - b.selfDamage - (a.enemyDamage - a.selfDamage)
+            })
+
+            const bestPosition = bestPositions[0]
+            return bestPosition.position
         }
 
-        const position = positions[0]
-
-        if (!position || !this.bot.blockAt(position)) return null
-
-        const damage = this.bot.getExplosionDamages(this.bot.entity, position.offset(0, 1, 0), 6, true)
-
-        if (positions && positions.length >= 1) {
-            if (
-                this.options.placeMode === 'safe' &&
-                this.bot.game.difficulty !== 'peaceful' &&
-                (damage > this.options.damageThreshold || damage >= this.bot.health)
-            ) {
-                return null
-            }
-
-            return position
+        if (!this.options.priority || this.options.priority === 'none') {
+            return positions[0]
         }
 
+        // incase no position was found
         return null
     }
 
@@ -195,6 +237,7 @@ export class AutoCrystal {
     private async placeCrystal(position: Vec3): Promise<boolean> {
         let crystalPlaced = false
 
+        // check if the crystal is already placed
         const crystal = this.bot.nearestEntity((entity) => entity.name === 'end_crystal')
 
         if (!crystal || (crystal && Math.floor(crystal.position.distanceTo(position)) > 0)) {
@@ -204,6 +247,7 @@ export class AutoCrystal {
 
             crystalPlaced = true
         } else if (crystal && crystal.position.distanceTo(this.bot.entity.position) <= 4) {
+            // if the crystal is already placed, we break it
             await this.breakCrystal(crystal)
         }
 
@@ -224,7 +268,7 @@ export class AutoCrystal {
         if (!crystal) crystal = this.bot.nearestEntity((entity) => entity.name === 'end_crystal')
 
         if (crystal) {
-            const damage = this.bot.getExplosionDamages(this.bot.entity, crystal.position, 6, true)
+            const damage = this.getDamage(this.bot.entity, crystal.position)
 
             if (
                 this.options.breakMode === 'safe' &&
@@ -253,7 +297,11 @@ export class AutoCrystal {
     private async getNearestPlayer(): Promise<Entity> {
         if (!this.enabled) return null
 
-        const player = this.bot.nearestEntity((entity) => entity.type === 'player' && entity.position.distanceTo(this.bot.entity.position) <= 6)
+        const player = this.bot.nearestEntity(
+            (entity) =>
+                entity.type === 'player' &&
+                entity.position.distanceTo(this.bot.entity.position) <= 6
+        )
 
         if (player) return player
         else return null
@@ -310,10 +358,13 @@ export class AutoCrystal {
             const crystal = this.bot.inventory.items().find((item) => item.name === 'end_crystal')
 
             if (player && crystal) {
+                // we equip an end crystal to the main hand if we don't have one equipped
                 if (!this.bot.heldItem || this.bot.heldItem.name !== crystal.name) {
                     const requiresConfirmation = this.bot.inventory.requiresConfirmation
 
-                    if (this.options.ignoreInventoryCheck) this.bot.inventory.requiresConfirmation = false
+                    if (this.options.ignoreInventoryCheck) {
+                        this.bot.inventory.requiresConfirmation = false
+                    }
 
                     this.bot.inventory.requiresConfirmation = requiresConfirmation
 
@@ -323,11 +374,15 @@ export class AutoCrystal {
                 try {
                     await sleep(50 * this.options.delay)
 
-                    this.debug(`executing findPosition took`, { useTime: true })
+                    this.debug(`executing findPosition took`, {
+                        useTime: true
+                    })
 
                     const position = await this.findPosition(player)
 
-                    this.debug(`executing findPosition took`, { useTimeEnd: true })
+                    this.debug(`executing findPosition took`, {
+                        useTimeEnd: true
+                    })
 
                     if (position) {
                         const placed = await this.placeCrystal(position)
