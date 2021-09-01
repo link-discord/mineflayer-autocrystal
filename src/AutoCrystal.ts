@@ -330,7 +330,6 @@ export class AutoCrystal {
                     this.debug(`executing findPosition took`, { useTimeEnd: true })
 
                     if (position) {
-                        this.debug(`Position where crystal will be placed: ${position.toString()}.`)
                         const placed = await this.placeCrystal(position)
                         if (placed) await this.breakCrystal()
                     }
