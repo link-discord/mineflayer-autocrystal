@@ -8,6 +8,10 @@ interface Options {
     ignoreInventoryCheck?: boolean;
     logErrors?: boolean;
     /**
+     * Emits the `debug` event with information about what AutoCrystal is up to.
+     */
+    logDebug?: boolean;
+    /**
      * If the damage exceeds the threshold, it will not place / break the crystal.
      */
     damageThreshold?: number;
@@ -28,6 +32,7 @@ export declare class AutoCrystal {
      * Options for the `AutoCrystal` class.
      * @typedef {Object} Options
      * @property {boolean} [ignoreInventoryCheck=true] If the inventory check should be ignored.
+     * @property {boolean} [logDebug=false] If the debug log should be emitted.
      * @property {boolean} [logErrors=false] If errors should be logged.
      * @property {number} [damageThreshold=5] - If the damage exceeds the threshold, it will not place / break the crystal.
      * @property {number} [delay=1] - The delay in ticks between each crystal placement.
@@ -41,6 +46,14 @@ export declare class AutoCrystal {
      * @param {Bot} bot
      */
     constructor(bot: MineflayerBot, options?: Options);
+    /**
+     * Emits the debug log event with the specified message.
+     * @param {string} message The message to be emitted.
+     * @returns {void}
+     * @memberof AutoCrystal
+     * @private
+     */
+    private debug;
     /**
      * Finds the best position to place the crystal on to.
      * @async
@@ -102,17 +115,15 @@ export declare class AutoCrystal {
     private stop;
     /**
      * Disables the AutoCrystal
-     * @async
-     * @returns {Promise<boolean>}
+     * @returns {boolean}
      * @memberof AutoCrystal
      */
-    disable(): Promise<boolean>;
+    disable(): boolean;
     /**
      * Enables the AutoCrystal
-     * @async
-     * @returns {Promise<boolean>}
+     * @returns {boolean}
      * @memberof AutoCrystal
      */
-    enable(): Promise<boolean>;
+    enable(): boolean;
 }
 export {};
