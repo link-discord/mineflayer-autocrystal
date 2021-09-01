@@ -9,6 +9,11 @@ interface MineflayerBot extends Bot {
     getExplosionDamages(entity: Entity, position: Vec3, raidus: number, rawDamages?: boolean): number
 }
 
+interface DebugOptions {
+    useTime?: boolean
+    useTimeEnd?: boolean
+}
+
 interface Options {
     ignoreInventoryCheck?: boolean
     logErrors?: boolean
@@ -73,15 +78,31 @@ export class AutoCrystal {
     }
 
     /**
+     * Options for the debug method.
+     * @typedef {Object} DebugOptions
+     * @property {boolean} [useTime=false] Will use the `console.time` method.
+     * @property {boolean} [useTimeEnd=false] Will use the `console.timeEnd` method.
+     * @private
+     */
+
+    /**
      * Emits the debug log event with the specified message.
      * @param {string} message The message to be emitted.
+     * @param {DebugOptions} options The options for the debug method.
      * @returns {void}
      * @memberof AutoCrystal
      * @private
      */
-    private debug(message: string): void {
-        // @ts-expect-error
-        if (this.options.logDebug) this.bot.emit('debug', `[AutoCrystal] ${message}`)
+    private debug(message: string, options?: DebugOptions): void {
+        if (!this.options.logDebug) return
+
+        if (options.useTime) {
+            console.time(`[AutoCrystal] ${message}`)
+        } else if (options.useTimeEnd) {
+            console.timeEnd(`[AutoCrystal] ${message}`)
+        } else {
+            console.log(`[AutoCrystal] ${message}`)
+        }
     }
 
     /**
