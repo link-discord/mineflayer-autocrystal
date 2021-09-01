@@ -28,9 +28,11 @@ async function main() {
         username: 'bot2'
     })
 
-    bot1.on('entitySpawn', (entity) => {
+    bot2.on('entitySpawn', (entity) => {
+        const pos = entity.position
+
         if (entity.name === 'end_crystal') {
-            console.log('[Bot (1)] Crystal has been placed.')
+            console.log(`[Bot (2)] Crystal has been placed at x: ${pos.x} y: ${pos.y} z: ${pos.z}`)
         }
     })
 
