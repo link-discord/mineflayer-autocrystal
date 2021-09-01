@@ -69,6 +69,7 @@ async function main() {
     })
 
     bot1.once('spawn', async () => {
+        bot1.autoCrystal.options.useDebug = true
         bot1.autoCrystal.options.logErrors = true
         bot1.autoCrystal.options.placeMode = 'damage'
         bot1.autoCrystal.options.breakMode = 'suicide'
