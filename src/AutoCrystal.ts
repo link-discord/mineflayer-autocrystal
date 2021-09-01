@@ -95,14 +95,9 @@ export class AutoCrystal {
      */
     private debug(message: string, options?: DebugOptions): void {
         if (!this.options.logDebug) return
-
-        if (options.useTime) {
-            console.time(`[AutoCrystal] ${message}`)
-        } else if (options.useTimeEnd) {
-            console.timeEnd(`[AutoCrystal] ${message}`)
-        } else {
-            console.log(`[AutoCrystal] ${message}`)
-        }
+        if (!options) console.log(`[AutoCrystal] ${message}`)
+        else if (options.useTime) console.time(`[AutoCrystal] ${message}`)
+        else if (options.useTimeEnd) console.timeEnd(`[AutoCrystal] ${message}`)
     }
 
     /**
