@@ -2,7 +2,12 @@ import { Bot } from 'mineflayer'
 import { Entity } from 'prismarine-entity'
 import { Vec3 } from 'vec3'
 interface MineflayerBot extends Bot {
-    getExplosionDamages(entity: Entity, position: Vec3, raidus: number, rawDamages?: boolean): number
+    getExplosionDamages(
+        entity: Entity,
+        position: Vec3,
+        raidus: number,
+        rawDamages?: boolean
+    ): number
 }
 interface Options {
     ignoreInventoryCheck?: boolean
