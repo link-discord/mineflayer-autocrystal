@@ -47,8 +47,16 @@ export declare class AutoCrystal {
      */
     constructor(bot: MineflayerBot, options?: Options);
     /**
+     * Options for the debug method.
+     * @typedef {Object} DebugOptions
+     * @property {boolean} [useTime=false] Will use the `console.time` method.
+     * @property {boolean} [useTimeEnd=false] Will use the `console.timeEnd` method.
+     * @private
+     */
+    /**
      * Emits the debug log event with the specified message.
      * @param {string} message The message to be emitted.
+     * @param {DebugOptions} options The options for the debug method.
      * @returns {void}
      * @memberof AutoCrystal
      * @private
