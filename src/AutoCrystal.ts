@@ -189,7 +189,7 @@ export class AutoCrystal {
         if (this.options.priority === 'distance') {
             // sort positions by closest distance
             positions = positions.sort((a, b) => {
-                return b.distanceTo(entity_position) - a.distanceTo(entity_position)
+                return a.distanceTo(entity_position) - b.distanceTo(entity_position)
             })
 
             return positions[0]
