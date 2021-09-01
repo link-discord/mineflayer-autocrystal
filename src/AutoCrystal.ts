@@ -158,10 +158,10 @@ export class AutoCrystal {
         // Filter out positions that are too close or too far away from the target
         positions = positions.filter(
             (block) =>
-                Math.round(block.distanceTo(entity_position)) >= 1.5 &&
+                Math.round(block.distanceTo(entity_position)) >= 1 &&
                 Math.round(block.distanceTo(entity_position)) <= 8 &&
                 Math.round(this.bot.entity.position.y) <= entity_position.y &&
-                this.bot.entity.position.xzDistanceTo(block) >= 1.5
+                this.bot.entity.position.xzDistanceTo(block) >= 1
         )
 
         // Filter out positions that cant be used
