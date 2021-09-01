@@ -203,8 +203,6 @@ export class AutoCrystal {
         const crystal = this.bot.nearestEntity((entity) => entity.name === 'end_crystal')
 
         if (!crystal || (crystal && Math.floor(crystal.position.distanceTo(position)) > 0)) {
-            this.debug('Now trying to place the crystal.')
-
             this.bot.lookAt(position, true, () => {
                 this.bot.placeEntity(this.bot.blockAt(position), new Vec3(0, 1, 0))
             })
@@ -213,8 +211,6 @@ export class AutoCrystal {
         } else if (crystal && crystal.position.distanceTo(this.bot.entity.position) <= 4) {
             await this.breakCrystal(crystal)
         }
-
-        this.debug(`Crystal placed: ${crystalPlaced}.`)
 
         return crystalPlaced
     }
@@ -231,9 +227,6 @@ export class AutoCrystal {
         if (!this.enabled) return false
 
         if (!crystal) crystal = this.bot.nearestEntity((entity) => entity.name === 'end_crystal')
-
-        // @ts-ignore
-        this.bot.emit('debug', `[AutoCrystal] Crystal entity: ${crystal?.id}`)
 
         if (crystal) {
             const damage = this.bot.getExplosionDamages(this.bot.entity, crystal.position, 6, true)
@@ -335,7 +328,11 @@ export class AutoCrystal {
                 try {
                     await sleep(50 * this.options.delay)
 
+                    this.debug(`executing findPosition took`, { useTime: true })
+
                     const position = await this.findPosition(player)
+
+                    this.debug(`executing findPosition took`, { useTimeEnd: true })
 
                     if (position) {
                         this.debug(`Position where crystal will be placed: ${position.toString()}.`)
