@@ -10,7 +10,7 @@
     },
     "devDependencies": {
         "@discordjs/docgen": "^0.10.0",
-        "@types/node": "^14.17.6",
+        "@types/node": "^16.7.10",
         "axios": "^0.21.1"
     },
     "scripts": {
