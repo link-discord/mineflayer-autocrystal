@@ -25,13 +25,18 @@ jobs:
       run: npm ci
     - name: Compile typescript code
       run: npm run build --if-present
-    - name: Run test with bedrock blocks
+    - name: Run test with "distance" mode
       run: npm test
       env:
-          MINECRAFT_BLOCK: 'minecraft:bedrock'
+          PRIORITY: 'distance'
           API: ${{ secrets.API }}
-    - name: Run test with obsidian blocks
+    - name: Run test with "damage" mode
       run: npm test
       env:
-          MINECRAFT_BLOCK: 'minecraft:obsidian'
+          PRIORITY: 'damage'
+          API: ${{ secrets.API }}
+    - name: Run test with "none" mode
+      run: npm test
+      env:
+          PRIORITY: 'none'
           API: ${{ secrets.API }}

@@ -12,6 +12,8 @@ function cleanup(bot) {
 async function main() {
     const { data } = await axios.get(`${process.env.API}/minecraft`)
 
+    const priority = process.env.PRIORITY ?? 'none'
+
     const bot1 = mineflayer.createBot({
         host: data.ip,
         port: data.port,
@@ -65,6 +67,7 @@ async function main() {
     bot1.once('spawn', async () => {
         bot1.autoCrystal.options.logDebug = true
         bot1.autoCrystal.options.logErrors = true
+        bot1.autoCrystal.options.priority = priority
 
         console.log('[Bot (1)] Bot has spawned')
 
