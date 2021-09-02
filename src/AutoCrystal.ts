@@ -385,6 +385,7 @@ export class AutoCrystal {
                     }
                 } catch (error) {
                     this.run = false
+                    // @ts-ignore
                     if (this.options.logErrors) this.bot.emit('error', error)
                 }
             } else {
