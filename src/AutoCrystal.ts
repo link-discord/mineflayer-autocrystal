@@ -9,7 +9,7 @@ interface MineflayerBot extends Bot {
     getExplosionDamages(
         entity: Entity,
         position: Vec3,
-        raidus: number,
+        radius: number,
         rawDamages?: boolean
     ): number
 }
