@@ -155,7 +155,6 @@ export class AutoCrystal {
             matching: (block) => block.name === 'obsidian' || block.name === 'bedrock'
         })
 
-        // Filter out positions that are too close or too far away from the target
         positions = positions.filter(
             (block) =>
                 Math.round(block.distanceTo(entity_position)) >= 1 &&
@@ -164,14 +163,12 @@ export class AutoCrystal {
                 this.bot.entity.position.xzDistanceTo(block) >= 1
         )
 
-        // Filter out positions that cant be used
         positions = positions.filter(
             (block) =>
                 this.bot.blockAt(block.offset(0, 1, 0)).name === 'air' &&
                 this.bot.blockAt(block.offset(0, 2, 0)).name === 'air'
         )
 
-        // filter the positions by damage if safe mode is enabled
         if (
             this.options.placeMode === 'safe' &&
             this.bot.game.difficulty !== 'peaceful' &&
@@ -183,11 +180,9 @@ export class AutoCrystal {
             })
         }
 
-        // incase there are no positions left
         if (!positions || positions.length === 0) return null
 
         if (this.options.priority === 'distance') {
-            // sort positions by closest distance
             positions = positions.sort((a, b) => {
                 return a.distanceTo(entity_position) - b.distanceTo(entity_position)
             })
@@ -196,7 +191,6 @@ export class AutoCrystal {
         }
 
         if (this.options.priority === 'damage') {
-            // calculate damage for each explosion
             const arr = positions.map((pos) => {
                 return {
                     position: pos,
@@ -213,7 +207,6 @@ export class AutoCrystal {
             // use that position so the whole array doesn't have to be sorted
             if (killPosition) return killPosition.position
 
-            // sort the array by lowest damage for the bot and highest damage for the enemy
             let bestPositions = arr.sort(function (a, b) {
                 return b.enemyDamage - b.selfDamage - (a.enemyDamage - a.selfDamage)
             })
@@ -226,7 +219,6 @@ export class AutoCrystal {
             return positions[0]
         }
 
-        // incase no position was found
         return null
     }
 
@@ -241,7 +233,6 @@ export class AutoCrystal {
     private async placeCrystal(position: Vec3): Promise<boolean> {
         let crystalPlaced = false
 
-        // check if the crystal is already placed
         const crystal = this.bot.nearestEntity((entity) => entity.name === 'end_crystal')
 
         if (!crystal || (crystal && Math.floor(crystal.position.distanceTo(position)) > 0)) {
@@ -251,7 +242,6 @@ export class AutoCrystal {
 
             crystalPlaced = true
         } else if (crystal && crystal.position.distanceTo(this.bot.entity.position) <= 4) {
-            // if the crystal is already placed, we break it
             await this.breakCrystal(crystal)
         }
 
