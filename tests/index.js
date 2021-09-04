@@ -79,7 +79,7 @@ async function main() {
             bot1.chat('/give @s minecraft:end_crystal 100')
             bot1.chat(`/fill 0 11 0 0 11 0 minecraft:bedrock`)
             bot1.chat(`/fill 2 11 0 4 11 0 minecraft:bedrock`)
-            bot1.chat(`/fill 3 10 1 4 10 -1 minecraft:bedrock`)
+            bot1.chat(`/fill 4 10 1 4 10 -1 minecraft:bedrock`)
             console.log('[Bot (1)] Platforms have been created.')
         }, 4 * 1000)
 
