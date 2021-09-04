@@ -126,7 +126,7 @@ export class AutoCrystal {
      * @returns {number} The estimated damage the entity would recieve.
      * @memberof AutoCrystal
      * @private
-     */ 
+     */
     private getDamage(entity: Entity, position: Vec3): number {
         return this.bot.getExplosionDamages(entity, position, 6, true)
     }
