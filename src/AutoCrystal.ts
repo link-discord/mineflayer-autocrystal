@@ -83,17 +83,7 @@ export class AutoCrystal {
      */
     constructor(
         public bot: MineflayerBot,
-        public options: Options = {
-            autoEquip: true,
-            ignoreInventoryCheck: true,
-            logDebug: false,
-            logErrors: false,
-            priority: 'distance',
-            placeMode: 'safe',
-            breakMode: 'safe',
-            damageThreshold: 5,
-            delay: 1
-        }
+        public options: Options
     ) {
         bot.on('physicsTick', () => {
             const player = this.getNearestPlayer()
