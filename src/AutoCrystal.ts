@@ -81,10 +81,7 @@ export class AutoCrystal {
      * @param {Options} options
      * @param {Bot} bot
      */
-    constructor(
-        public bot: MineflayerBot,
-        public options: Options
-    ) {
+    constructor(public bot: MineflayerBot, public options: Options) {
         bot.on('physicsTick', () => {
             const player = this.getNearestPlayer()
 
