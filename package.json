@@ -10,7 +10,7 @@
         "vec3": "^0.1.7"
     },
     "devDependencies": {
-        "@discordjs/docgen": "^0.10.0",
+        "@discordjs/docgen": "^0.11.0",
         "@types/node": "^16.7.10",
         "axios": "^0.21.1"
     },
